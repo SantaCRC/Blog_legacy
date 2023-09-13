@@ -18,7 +18,7 @@ subtitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
 
 [sidebar.avatar]
 enabled = true
-local = true
+local = false
 src = "https://es.gravatar.com/userimage/148097488/bbeb1fc5374f2b7ab6842cfb3528b735.jpeg"
 
 [article]
