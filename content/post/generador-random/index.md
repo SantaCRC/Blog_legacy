@@ -7,7 +7,7 @@ tags:
 description: En este post se muestra como generar números "aleatorios" en una FPGA o mejor dicho pseudo-aleatorios.
 categories:
 - Tutoriales
-date: 2023-20-8 00:00:00+0000
+date: 2023-07-08 00:00:00+0000
 ---
 Generar números aleatorios es imposible, por lo menos en el ámbito computacional, claramente en muchos lenguajes de programación existen las funciones random, lo que hacen estas funciones es generar números pseudo-aleatorios y eso es lo que vamos a hacer
 
