@@ -2,10 +2,10 @@
 [en]
 languageName = "English"
 languagedirection = "ltr"
-title = "Example Site"
+title = "Fabian's Blog"
 weight = 1
 [es]
 languageName = "Español"
 languagedirection = "ltr"
-title = "Example Site"
+title = "Fabian's Blog"
 weight = 0
