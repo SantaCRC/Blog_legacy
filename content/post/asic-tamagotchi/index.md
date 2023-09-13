@@ -10,7 +10,7 @@ description: En este post se muestra como generar números "aleatorios" en una F
 Categories:
  - Proyectos
 date: 2023-9-17 00:00:00+0000
-updated: 2023-9-18 00:00:00+0000
+updated: 2023-7-9 00:00:00+0000
 ---
 Para el proyecto personal TinyTapeout 4, diseñé un ASIC Tamagotchi que reside en el chip. Dado el espacio limitado en el chip, este Tamagotchi es simple pero funcional. Además, representa un excelente punto de partida para aprender sobre el diseño de ASIC y explora conceptos interesantes, como la implementación de la comunicación serial UART y la generación de números pseudoaleatorios, que mencioné en un post anterior.
 

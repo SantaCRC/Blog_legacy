@@ -7,7 +7,7 @@ tags:
 - Keras
 categories:
 - Tutoriales
-date: 2023-8-20 00:00:00+0000
+date: 2023-8-7 00:00:00+0000
 description: En este post se muestra como crear un clasificador de imágenes con redes neuronales.
 ---
 
