@@ -9,8 +9,8 @@ tags:
 description: En este post se muestra como generar números "aleatorios" en una FPGA o mejor dicho pseudo-aleatorios.
 Categories:
  - Proyectos
-date: 2023-09-17 00:00:00+0000
-updated: 2023-07-09 00:00:00+0000
+date: 2023-09-07 00:00:00+0000
+updated: 2023-09-12 00:00:00+0000
 ---
 Para el proyecto personal TinyTapeout 4, diseñé un ASIC Tamagotchi que reside en el chip. Dado el espacio limitado en el chip, este Tamagotchi es simple pero funcional. Además, representa un excelente punto de partida para aprender sobre el diseño de ASIC y explora conceptos interesantes, como la implementación de la comunicación serial UART y la generación de números pseudoaleatorios, que mencioné en un post anterior.
 
