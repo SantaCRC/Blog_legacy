@@ -5,7 +5,7 @@ rssFullContent = true
 favicon = "/favicon.png"
 
 [footer]
-since = 2020
+since = 2022
 customText = ""
 
 [dateFormat]
@@ -19,7 +19,7 @@ subtitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
 [sidebar.avatar]
 enabled = true
 local = true
-src = "img/avatar.png"
+src = "https://es.gravatar.com/userimage/148097488/bbeb1fc5374f2b7ab6842cfb3528b735.jpeg"
 
 [article]
 math = false
