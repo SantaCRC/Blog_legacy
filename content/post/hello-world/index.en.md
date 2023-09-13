@@ -37,7 +37,7 @@ Select the appropriate device:
 5. Write the Verilog code to turn on the LED:
    - Open the file "LED.v" and write the following code:
 
-````verilog
+```verilog
 module LED(
     input btn,
     output reg led
@@ -64,7 +64,7 @@ endmodule
 
 Note that the buttons and LEDs on this FPGA have inverse behavior, meaning that the value is 0 when a button is pressed and 1 when it is not pressed. Similarly, when the value is 0, the LED is on, and when the value is 1, the LED is off. To adjust for this, a modification has been made to the Verilog code by inverting the default value of the LED.
 
-````verilog	
+```verilog	
 module LED(
     input btn,
     output reg led = 1
