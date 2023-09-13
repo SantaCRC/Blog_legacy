@@ -9,6 +9,7 @@ tags:
     - FPGA 
     - Verilog 
     - Tang Nano 9K
+math: true
 ---
 ## Introducción
 La comunicación UART es una de las más utilizadas en el mundo de la electrónica, ya que es una de las más sencillas de implementar y es muy útil para la comunicación entre dispositivos. En este tutorial aprenderás a implementar la comunicación UART en una FPGA, utilizando el lenguaje de descripción de hardware Verilog.
