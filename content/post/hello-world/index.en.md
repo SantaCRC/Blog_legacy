@@ -1,16 +1,16 @@
 ---
-title: "Tutorial: Encendiendo un LED con la placa de desarrollo Tang Nano 9K"
-description: Descubre cómo encender un LED utilizando la placa de desarrollo Tang Nano 9K de Sipeed
-slug: Tang-nano-primero-pasos
+title: "Tutorial: Lighting an LED with the Tang Nano 9K development board"
+description: Discover how to light an LED using Sipeed's Tang Nano 9K development board.
+slug: Tang-nano-first-steps
 date: 2023-03-06 00:00:00+0000
 image: cover.jpg
 categories:
-    - Tutoriales
+    - Tutorials
 tags:
     - FPGA 
     - Verilog 
     - Tang Nano 9K
-weight: 1       # You can add weight to some posts to override the default sorting (date descending)
+weight: 1 # You can add weight to some posts to override the default sorting (date descending)
 ---
 The Tang Nano is a series of FPGA development boards developed by Sipeed, based on FPGAs from Gowin, a Chinese company known for their low cost and high performance. In this tutorial, I will show you how to light an LED using the Tang Nano 9K board, which features a Gowin GW1N-9K FPGA, 9K LUTs, 240Kb RAM, 128Kb ROM, 2 PLLs and 2 SPIs. Through the Gowin IDE, you will learn how to program the board and make a simple connection to achieve this goal.
 
