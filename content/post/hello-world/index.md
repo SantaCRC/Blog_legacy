@@ -2,7 +2,7 @@
 title: "Tutorial: Encendiendo un LED con la placa de desarrollo Tang Nano 9K"
 description: Descubre cómo encender un LED utilizando la placa de desarrollo Tang Nano 9K de Sipeed
 slug: Tang-nano-primero-pasos
-date: 2022-03-06 00:00:00+0000
+date: 2023-03-06 00:00:00+0000
 image: cover.jpg
 categories:
     - Tutoriales
