@@ -1,5 +1,5 @@
 # Change baseurl before deploy
-baseurl = "https://fabianalvarez.dev/blog/"
+baseurl = "https://fabianalvarez.dev/"
 languageCode = "en-us"
 paginate = 5
 title = "Fabian's blog"
