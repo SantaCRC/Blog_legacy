@@ -1,0 +1,337 @@
+<!doctype html><html lang=es dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="En este post se muestra como crear un clasificador de imágenes con redes neuronales."><title>Como crear un clasificador de imagenes con redes neuronales</title>
+<link rel=canonical href=https://fabianalvarez.dev/p/como-crear-un-clasificador-de-imagenes-con-redes-neuronales/><link rel=stylesheet href=/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css><meta property='og:title' content="Como crear un clasificador de imagenes con redes neuronales"><meta property='og:description' content="En este post se muestra como crear un clasificador de imágenes con redes neuronales."><meta property='og:url' content='https://fabianalvarez.dev/p/como-crear-un-clasificador-de-imagenes-con-redes-neuronales/'><meta property='og:site_name' content="Fabian's Blog"><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='IA'><meta property='article:tag' content='Python'><meta property='article:tag' content='Tensorflow'><meta property='article:tag' content='Keras'><meta property='article:published_time' content='2023-08-07T00:00:00+00:00'><meta property='article:modified_time' content='2023-08-07T00:00:00+00:00'><meta name=twitter:title content="Como crear un clasificador de imagenes con redes neuronales"><meta name=twitter:description content="En este post se muestra como crear un clasificador de imágenes con redes neuronales."><link rel="shortcut icon" href=/favicon.ico></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Ocultar menú">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=https://es.gravatar.com/userimage/148097488/bbeb1fc5374f2b7ab6842cfb3528b735.jpeg width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🍥</span></figure><div class=site-meta><h1 class=site-name><a href=/>Fabian's Blog</a></h1><h2 class=site-description>Full time marker, part time engineer</h2></div></header><ol class=menu-social><li><a href=https://github.com/SantaCRC target=_blank title=GitHub rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/archives/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archivo</span></a></li><li><a href=/search/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Buscar</span></a></li><li><a href=/links/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li class=menu-bottom-section><ol class=menu><li id=i18n-switch><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h7"/><path d="M9 3v2c0 4.418-2.239 8-5 8"/><path d="M5 9c-.003 2.144 2.952 3.908 6.7 4"/><path d="M12 20l4-9 4 9"/><path d="M19.1 18h-6.2"/></svg>
+<select name=language title=language onchange="window.location.href=this.selectedOptions[0].value"><option value=https://fabianalvarez.dev/en/>English</option><option value=https://fabianalvarez.dev/ selected>Español</option></select></li><li id=dark-mode-toggle><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Modo oscuro</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">Tabla de contenido</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#que-es-una-cnn>¿Que es una CNN?</a></li><li><a href=#que-necesitamos-para-crear-el-clasificador-de-imágenes>¿Que necesitamos para crear el clasificador de imágenes?</a></li><li><a href=#preprocesamiento-del-dataset>Preprocesamiento del dataset</a></li><li><a href=#creación-del-modelo>Creación del modelo</a></li><li><a href=#evaluación-del-modelo>Evaluación del modelo</a></li><li><a href=#predicción>Predicción</a></li><li><a href=#extra>Extra</a></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/tutoriales/ style=background-color:#2a9d8f;color:#fff>Tutoriales</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/p/como-crear-un-clasificador-de-imagenes-con-redes-neuronales/>Como crear un clasificador de imagenes con redes neuronales</a></h2><h3 class=article-subtitle>En este post se muestra como crear un clasificador de imágenes con redes neuronales.</h3></div><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Aug 07, 2023</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>Tiempo de lectura 10 minutos</time></div></footer></div></header><section class=article-content><p>En la actualidad la inteligencia artificial esta en todas partes, desde los asistentes de voz de los smartphones hasta los sistemas de reconocimiento facial de las redes sociales. En este post vamos a ver como crear un clasificador de imágenes con redes neuronales.</p><p>Como lenguaje de programación vamos a usar Python ya que es uno de los lenguajes más populares para la inteligencia artificial. Para crear el clasificador de imágenes vamos a usar la librería Tensorflow-Keras, que es una librería de alto nivel que nos permite crear redes neuronales de forma sencilla. En especifico vamos a crear una CNN (Convolutional Neural Network).</p><h2 id=que-es-una-cnn><a href=#que-es-una-cnn>#</a>
+¿Que es una CNN?</h2><p>Una CNN es una red neuronal que se utiliza principalmente para clasificar imágenes. Una CNN es una red neuronal que tiene capas de convolución y capas de pooling. Las capas de convolución son capas que extraen características de las imágenes, mientras que las capas de pooling reducen la dimensionalidad de las imágenes.</p><h2 id=que-necesitamos-para-crear-el-clasificador-de-imágenes><a href=#que-necesitamos-para-crear-el-clasificador-de-im%c3%a1genes>#</a>
+¿Que necesitamos para crear el clasificador de imágenes?</h2><p>Como todas las redes neuronales para entrenar se necesita un dataset, en este caso de imágenes, para entrenar vamos a utilizar una dataset real no una de ejemplo, ya que las de ejemplo se importan directamente al código y no muestra como se hace el preprocesamiento del dataset, que es uno de los pasos mas importantes para la creación de nuestro modelo, nuestro modelo es tan bueno como el dataset que le demos.</p><h2 id=preprocesamiento-del-dataset><a href=#preprocesamiento-del-dataset>#</a>
+Preprocesamiento del dataset</h2><p>Vamos a descargar el <a class=link href="https://www.kaggle.com/datasets/ravirajsinh45/real-life-industrial-dataset-of-casting-product?resource=download" target=_blank rel=noopener>dataset de clasificación de fabricación de kaggle</a> que contiene ejemplos de piezas fabricadas en aluminio, donde se clasifican en 2 categorías diferentes, defectuosas y no defectuosas. El dataset contiene 3000 imágenes de 2 categorías diferentes, 1500 imágenes de piezas defectuosas y 1500 imágenes de piezas no defectuosas. El dataset esta dividido en 2 carpetas, una para las imágenes de entrenamiento y otra para las imágenes de prueba y dentro de cada carpeta hay 2 carpetas, una para las imágenes defectuosas y otra para las imágenes no defectuosas. De manera que el dataset tiene la siguiente estructura:</p><pre><code>dataset
+├───train
+│   ├───def_front
+│   └───ok_front
+└───validation
+    ├───def_front
+    └───ok_front
+</code></pre><p>Con esto ya tenemos nuestro dataset, ahora vamos a crear nuestro modelo.</p><h2 id=creación-del-modelo><a href=#creaci%c3%b3n-del-modelo>#</a>
+Creación del modelo</h2><p>Como la creación de los modelos de redes neuronales necesitan ejecutar bloques de código de manera repetitiva para encontrar el mejor modelo, vamos a usar google colab, que es un servicio de google que nos permite ejecutar código de manera remota en la nube, de manera que no necesitamos tener un ordenador con una GPU para entrenar nuestros modelos, ya que google colab nos permite usar una GPU de manera gratuita.</p><p>Como mencione anteriormente vamos a usar Tensorflow-Keras, por lo cual vamos a importar las librerías necesarias para crear nuestro modelo.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>tensorflow</span> <span class=k>as</span> <span class=nn>tf</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>tensorflow.keras.preprocessing.image</span> <span class=kn>import</span> <span class=n>ImageDataGenerator</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>tensorflow.keras.optimizers</span> <span class=kn>import</span> <span class=n>RMSprop</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>tensorflow.keras.preprocessing</span> <span class=kn>import</span> <span class=n>image</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>matplotlib.pyplot</span> <span class=k>as</span> <span class=nn>plt</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>matplotlib.image</span> <span class=k>as</span> <span class=nn>mpimg</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>os</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>random</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>numpy</span> <span class=k>as</span> <span class=nn>np</span>
+</span></span></code></pre></td></tr></table></div></div><p>Importamos la librería de Tensorflow ademas de otras que nos serán útiles para el preprocesamiento del dataset y la visualización de las imágenes como el caso de matplotlib.</p><p>Como mencione vamos a usar colab, por lo cual necesitamos subir nuestro dataset a colab, para reducir el tiempo de subida vamos a convertir nuestra carpeta de dataset en un zip y subirlo a Google Drive, al tenerlo ya en nuestro Drive vamos a descomprimirlo con la librería zipfile.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>zipfile</span>
+</span></span><span class=line><span class=cl><span class=k>with</span> <span class=n>zipfile</span><span class=o>.</span><span class=n>ZipFile</span><span class=p>(</span><span class=s2>&#34;/content/drive/MyDrive/IA/T.zip&#34;</span><span class=p>,</span><span class=s2>&#34;r&#34;</span><span class=p>)</span> <span class=k>as</span> <span class=n>zip_ref</span><span class=p>:</span>
+</span></span><span class=line><span class=cl><span class=n>zip_ref</span><span class=o>.</span><span class=n>extractall</span><span class=p>(</span><span class=s2>&#34;/content/drive/MyDrive/IA/&#34;</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>Con esto ya tenemos nuestra carpeta de dataset descomprimida en nuestro Drive.</p><p>Ahora podemos proseguir con la creación de las clases del dataset, y con esto vemos la importancia de la estructura de nuestra carpeta del dataset, ya que keras nos permite crear las clases de manera automática, solo necesitamos especificar la ruta de la carpeta de entrenamiento y la carpeta de prueba. Iniciando con la carpeta de entrenamiento.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>train_ds</span> <span class=o>=</span> <span class=n>tf</span><span class=o>.</span><span class=n>keras</span><span class=o>.</span><span class=n>utils</span><span class=o>.</span><span class=n>image_dataset_from_directory</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;/content/drive/MyDrive/IA/casting_data/train&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>validation_split</span><span class=o>=</span><span class=mf>0.2</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>subset</span><span class=o>=</span><span class=s2>&#34;training&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>seed</span><span class=o>=</span><span class=mi>123</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>image_size</span><span class=o>=</span><span class=p>(</span><span class=mi>300</span><span class=p>,</span><span class=mi>300</span><span class=p>))</span>
+</span></span></code></pre></td></tr></table></div></div><p>Esta función tiene varios parámetros, el primero es la ruta de la carpeta de entrenamiento, el segundo es el porcentaje de imágenes que se van a usar para la validación, el tercero es el tipo de dataset, en este caso es de entrenamiento, el cuarto es la semilla para la generación de números aleatorios, y el último es el tamaño de las imágenes que vamos a usar, en este caso 300x300.</p><p>Ahora vamos con la dataset de validación.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>val_ds</span> <span class=o>=</span> <span class=n>tf</span><span class=o>.</span><span class=n>keras</span><span class=o>.</span><span class=n>utils</span><span class=o>.</span><span class=n>image_dataset_from_directory</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;/content/drive/MyDrive/IA/T/train&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=n>validation_split</span><span class=o>=</span><span class=mf>0.2</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=n>subset</span><span class=o>=</span><span class=s2>&#34;validation&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=n>seed</span><span class=o>=</span><span class=mi>200</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=n>image_size</span><span class=o>=</span><span class=p>(</span><span class=mi>300</span><span class=p>,</span><span class=mi>300</span><span class=p>))</span>
+</span></span></code></pre></td></tr></table></div></div><p>Esta función tiene los mismos parámetros que la anterior, solo cambia el tipo de dataset, en este caso es de validación, y la semilla para la generación de números aleatorios.</p><p>Si imprimimos las clases creadas podemos ver el nombre de las clases y vemos que keras las ha creado de manera automática con el nombre de las carpetas.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>class_names</span> <span class=o>=</span> <span class=n>train_ds</span><span class=o>.</span><span class=n>class_names</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=n>class_names</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=o>[</span><span class=s1>&#39;def_front&#39;</span>, <span class=s1>&#39;ok_front&#39;</span><span class=o>]</span>
+</span></span></code></pre></td></tr></table></div></div><p>Ahora vamos a visualizar algunas imágenes de nuestro dataset, para esto vamos a crear una función que nos permita visualizar las imágenes.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>matplotlib.pyplot</span> <span class=k>as</span> <span class=nn>plt</span> <span class=c1># Importar la librería de matplolib para gráficas</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>plt</span><span class=o>.</span><span class=n>figure</span><span class=p>(</span><span class=n>figsize</span><span class=o>=</span><span class=p>(</span><span class=mi>10</span><span class=p>,</span> <span class=mi>10</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>images</span><span class=p>,</span> <span class=n>labels</span> <span class=ow>in</span> <span class=n>train_ds</span><span class=o>.</span><span class=n>take</span><span class=p>(</span><span class=mi>1</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>  <span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>9</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>ax</span> <span class=o>=</span> <span class=n>plt</span><span class=o>.</span><span class=n>subplot</span><span class=p>(</span><span class=mi>3</span><span class=p>,</span> <span class=mi>3</span><span class=p>,</span> <span class=n>i</span> <span class=o>+</span> <span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>plt</span><span class=o>.</span><span class=n>imshow</span><span class=p>(</span><span class=n>images</span><span class=p>[</span><span class=n>i</span><span class=p>]</span><span class=o>.</span><span class=n>numpy</span><span class=p>()</span><span class=o>.</span><span class=n>astype</span><span class=p>(</span><span class=s2>&#34;uint8&#34;</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>    <span class=n>plt</span><span class=o>.</span><span class=n>title</span><span class=p>(</span><span class=n>class_names</span><span class=p>[</span><span class=n>labels</span><span class=p>[</span><span class=n>i</span><span class=p>]])</span>
+</span></span><span class=line><span class=cl>    <span class=n>plt</span><span class=o>.</span><span class=n>axis</span><span class=p>(</span><span class=s2>&#34;off&#34;</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p align=center><img src=https://i.imgur.com/qlN7lmK.png></p><p>Ahora vamos a crear nuestro modelo.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>num_classes</span> <span class=o>=</span> <span class=nb>len</span><span class=p>(</span><span class=n>class_names</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>model</span> <span class=o>=</span> <span class=n>Sequential</span><span class=p>([</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>Rescaling</span><span class=p>(</span><span class=mf>1.</span><span class=o>/</span><span class=mi>255</span><span class=p>,</span> <span class=n>input_shape</span><span class=o>=</span><span class=p>(</span><span class=mi>300</span><span class=p>,</span> <span class=mi>300</span><span class=p>,</span> <span class=mi>3</span><span class=p>)),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>Conv2D</span><span class=p>(</span><span class=mi>16</span><span class=p>,</span> <span class=mi>3</span><span class=p>,</span> <span class=n>padding</span><span class=o>=</span><span class=s1>&#39;same&#39;</span><span class=p>,</span> <span class=n>activation</span><span class=o>=</span><span class=s1>&#39;relu&#39;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>MaxPooling2D</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>Conv2D</span><span class=p>(</span><span class=mi>32</span><span class=p>,</span> <span class=mi>3</span><span class=p>,</span> <span class=n>padding</span><span class=o>=</span><span class=s1>&#39;same&#39;</span><span class=p>,</span> <span class=n>activation</span><span class=o>=</span><span class=s1>&#39;relu&#39;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>MaxPooling2D</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>Conv2D</span><span class=p>(</span><span class=mi>64</span><span class=p>,</span> <span class=mi>3</span><span class=p>,</span> <span class=n>padding</span><span class=o>=</span><span class=s1>&#39;same&#39;</span><span class=p>,</span> <span class=n>activation</span><span class=o>=</span><span class=s1>&#39;relu&#39;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>MaxPooling2D</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>Flatten</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>Dense</span><span class=p>(</span><span class=mi>128</span><span class=p>,</span> <span class=n>activation</span><span class=o>=</span><span class=s1>&#39;relu&#39;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>Dense</span><span class=p>(</span><span class=n>num_classes</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>])</span>
+</span></span></code></pre></td></tr></table></div></div><p>Este modelo tiene 10 capas, la primera capa es de normalización, la segunda es una capa de convolución con 16 filtros, la tercera es una capa de max pooling, la cuarta es una capa de convolución con 32 filtros, la quinta es una capa de max pooling, la sexta es una capa de convolución con 64 filtros, la séptima es una capa de max pooling, la octava es una capa de aplanamiento, la novena es una capa densa con 128 neuronas y la última es una capa densa con 2 neuronas, ya que tenemos 2 clases.</p><p>Esta es la estructura básica de cualquier red CNN, la cual se compone de capas de convolución, capas de max pooling y finalmente capas densas.</p><p>Ahora compilamos el modelo.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>model</span><span class=o>.</span><span class=n>compile</span><span class=p>(</span><span class=n>optimizer</span><span class=o>=</span><span class=s1>&#39;adam&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>              <span class=n>loss</span><span class=o>=</span><span class=n>tf</span><span class=o>.</span><span class=n>keras</span><span class=o>.</span><span class=n>losses</span><span class=o>.</span><span class=n>SparseCategoricalCrossentropy</span><span class=p>(</span><span class=n>from_logits</span><span class=o>=</span><span class=kc>True</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>              <span class=n>metrics</span><span class=o>=</span><span class=p>[</span><span class=s1>&#39;accuracy&#39;</span><span class=p>])</span>
+</span></span></code></pre></td></tr></table></div></div><p>Para asegurarnos que todo salio bien vamos a imprimir el resumen del modelo.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>model</span><span class=o>.</span><span class=n>summary</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>Model: <span class=s2>&#34;sequential_3&#34;</span>
+</span></span><span class=line><span class=cl>_________________________________________________________________
+</span></span><span class=line><span class=cl> Layer <span class=o>(</span><span class=nb>type</span><span class=o>)</span>                Output Shape              Param <span class=c1>#</span>
+</span></span><span class=line><span class=cl><span class=o>=================================================================</span>
+</span></span><span class=line><span class=cl> rescaling_5 <span class=o>(</span>Rescaling<span class=o>)</span>     <span class=o>(</span>None, 300, 300, 3<span class=o>)</span>       <span class=m>0</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl> conv2d_15 <span class=o>(</span>Conv2D<span class=o>)</span>          <span class=o>(</span>None, 300, 300, 16<span class=o>)</span>      <span class=m>448</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl> max_pooling2d_15 <span class=o>(</span>MaxPoolin  <span class=o>(</span>None, 150, 150, 16<span class=o>)</span>     <span class=m>0</span>
+</span></span><span class=line><span class=cl> g2D<span class=o>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl> conv2d_16 <span class=o>(</span>Conv2D<span class=o>)</span>          <span class=o>(</span>None, 150, 150, 32<span class=o>)</span>      <span class=m>4640</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl> max_pooling2d_16 <span class=o>(</span>MaxPoolin  <span class=o>(</span>None, 75, 75, 32<span class=o>)</span>       <span class=m>0</span>
+</span></span><span class=line><span class=cl> g2D<span class=o>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl> conv2d_17 <span class=o>(</span>Conv2D<span class=o>)</span>          <span class=o>(</span>None, 75, 75, 64<span class=o>)</span>        <span class=m>18496</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl> max_pooling2d_17 <span class=o>(</span>MaxPoolin  <span class=o>(</span>None, 37, 37, 64<span class=o>)</span>       <span class=m>0</span>
+</span></span><span class=line><span class=cl> g2D<span class=o>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl> flatten_5 <span class=o>(</span>Flatten<span class=o>)</span>         <span class=o>(</span>None, 87616<span class=o>)</span>             <span class=m>0</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl> dense_8 <span class=o>(</span>Dense<span class=o>)</span>             <span class=o>(</span>None, 128<span class=o>)</span>               <span class=m>11214976</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl> dense_9 <span class=o>(</span>Dense<span class=o>)</span>             <span class=o>(</span>None, 2<span class=o>)</span>                 <span class=nv>258</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=o>=================================================================</span>
+</span></span><span class=line><span class=cl>Total params: 11,238,818
+</span></span><span class=line><span class=cl>Trainable params: 11,238,818
+</span></span><span class=line><span class=cl>Non-trainable params: <span class=m>0</span>
+</span></span><span class=line><span class=cl>_________________________________________________________________
+</span></span></code></pre></td></tr></table></div></div><p>Ahora vamos a entrenar el modelo.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>epochs</span><span class=o>=</span><span class=mi>4</span>
+</span></span><span class=line><span class=cl><span class=n>history</span> <span class=o>=</span> <span class=n>model</span><span class=o>.</span><span class=n>fit</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>  <span class=n>train_ds</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=n>validation_data</span><span class=o>=</span><span class=n>val_ds</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=n>epochs</span><span class=o>=</span><span class=n>epochs</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>Vamos a iniciar el entrenamiento con 4 épocas, pero si queremos podemos aumentar el número de épocas para mejorar el modelo.</p><h2 id=evaluación-del-modelo><a href=#evaluaci%c3%b3n-del-modelo>#</a>
+Evaluación del modelo</h2><p>Para evaluar un modelo tenemos dos métricas que nos pueden ayudar a saber si el modelo esta bien entrenado, estas son la precisión y la pérdida. Para entenderlas las graficaremos.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>acc</span> <span class=o>=</span> <span class=n>history</span><span class=o>.</span><span class=n>history</span><span class=p>[</span><span class=s1>&#39;accuracy&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=n>val_acc</span> <span class=o>=</span> <span class=n>history</span><span class=o>.</span><span class=n>history</span><span class=p>[</span><span class=s1>&#39;val_accuracy&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>loss</span> <span class=o>=</span> <span class=n>history</span><span class=o>.</span><span class=n>history</span><span class=p>[</span><span class=s1>&#39;loss&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=n>val_loss</span> <span class=o>=</span> <span class=n>history</span><span class=o>.</span><span class=n>history</span><span class=p>[</span><span class=s1>&#39;val_loss&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>epochs_range</span> <span class=o>=</span> <span class=nb>range</span><span class=p>(</span><span class=n>epochs</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>plt</span><span class=o>.</span><span class=n>figure</span><span class=p>(</span><span class=n>figsize</span><span class=o>=</span><span class=p>(</span><span class=mi>8</span><span class=p>,</span> <span class=mi>8</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=n>plt</span><span class=o>.</span><span class=n>subplot</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>plt</span><span class=o>.</span><span class=n>plot</span><span class=p>(</span><span class=n>epochs_range</span><span class=p>,</span> <span class=n>acc</span><span class=p>,</span> <span class=n>label</span><span class=o>=</span><span class=s1>&#39;Training Accuracy&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>plt</span><span class=o>.</span><span class=n>plot</span><span class=p>(</span><span class=n>epochs_range</span><span class=p>,</span> <span class=n>val_acc</span><span class=p>,</span> <span class=n>label</span><span class=o>=</span><span class=s1>&#39;Validation Accuracy&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>plt</span><span class=o>.</span><span class=n>legend</span><span class=p>(</span><span class=n>loc</span><span class=o>=</span><span class=s1>&#39;lower right&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>plt</span><span class=o>.</span><span class=n>title</span><span class=p>(</span><span class=s1>&#39;Training and Validation Accuracy&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>plt</span><span class=o>.</span><span class=n>subplot</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>2</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>plt</span><span class=o>.</span><span class=n>plot</span><span class=p>(</span><span class=n>epochs_range</span><span class=p>,</span> <span class=n>loss</span><span class=p>,</span> <span class=n>label</span><span class=o>=</span><span class=s1>&#39;Training Loss&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>plt</span><span class=o>.</span><span class=n>plot</span><span class=p>(</span><span class=n>epochs_range</span><span class=p>,</span> <span class=n>val_loss</span><span class=p>,</span> <span class=n>label</span><span class=o>=</span><span class=s1>&#39;Validation Loss&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>plt</span><span class=o>.</span><span class=n>legend</span><span class=p>(</span><span class=n>loc</span><span class=o>=</span><span class=s1>&#39;upper right&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>plt</span><span class=o>.</span><span class=n>title</span><span class=p>(</span><span class=s1>&#39;Training and Validation Loss&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>plt</span><span class=o>.</span><span class=n>show</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><p>En la gráfica de la izquierda podemos ver que la precisión de entrenamiento y en la de la derecha la pérdida de entrenamiento.</p><p align=center><img src=https://i.imgur.com/IckUEug.png></p><p>Para interpretar estas gráficas podemos ver que la precisión de entrenamiento aumenta con cada época, pero la precisión de validación se estanca en 0.8, lo cual nos dice que el modelo esta sobreajustado, ya que no esta generalizando bien.</p><p>De la misma manera podemos ver que la pérdida de entrenamiento disminuye con cada época, pero la pérdida de validación se estanca en 0.4, lo cual nos dice que el modelo esta sobreajustado, ya que no esta generalizando bien.</p><p>En resumen entre mas cerca estén las lineas azules y naranjas, mejor es el modelo. En este caso hay un pequeño sobreajuste, pero no es tan grave.</p><p>Con esto podemos finalizar el modelo, ahora vamos a evaluarlo con datos que no ha visto.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>test_ds</span> <span class=o>=</span> <span class=n>tf</span><span class=o>.</span><span class=n>keras</span><span class=o>.</span><span class=n>utils</span><span class=o>.</span><span class=n>image_dataset_from_directory</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;/content/drive/MyDrive/IA/casting_data/test&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=n>seed</span><span class=o>=</span><span class=mi>123</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=n>image_size</span><span class=o>=</span><span class=p>(</span><span class=mi>300</span><span class=p>,</span><span class=mi>300</span><span class=p>))</span>
+</span></span></code></pre></td></tr></table></div></div><p>creamos un dataset de validación y evaluamos el modelo.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>model</span><span class=o>.</span><span class=n>evaluate</span><span class=p>(</span><span class=n>test_ds</span><span class=p>,</span><span class=n>return_dict</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>Esto nos devuelve un diccionario con las métricas que definimos al compilar el modelo, en este caso la precisión y la pérdida.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>23/23 <span class=o>[==============================]</span> - 66s 2s/step - loss: 0.0397 - accuracy: 0.9902
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s1>&#39;loss&#39;</span>: 0.039654314517974854, <span class=s1>&#39;accuracy&#39;</span>: 0.9902098178863525<span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>Vemos entonces que la precisión es de 0.99 y la pérdida es de 0.04, lo cual es muy bueno.</p><h2 id=predicción><a href=#predicci%c3%b3n>#</a>
+Predicción</h2><p>Ahora vamos a probar el modelo con una imagen que no ha visto y que seria una entrada del modelo en la vida real.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>image_path</span> <span class=o>=</span> <span class=s1>&#39;/content/drive/MyDrive/IA/casting_data/test/def_front/cast_def_0_1189.jpeg&#39;</span>
+</span></span><span class=line><span class=cl><span class=n>image</span> <span class=o>=</span> <span class=n>tf</span><span class=o>.</span><span class=n>keras</span><span class=o>.</span><span class=n>preprocessing</span><span class=o>.</span><span class=n>image</span><span class=o>.</span><span class=n>load_img</span><span class=p>(</span><span class=n>image_path</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>input_arr</span> <span class=o>=</span> <span class=n>tf</span><span class=o>.</span><span class=n>keras</span><span class=o>.</span><span class=n>preprocessing</span><span class=o>.</span><span class=n>image</span><span class=o>.</span><span class=n>img_to_array</span><span class=p>(</span><span class=n>image</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>input_arr</span> <span class=o>=</span> <span class=n>np</span><span class=o>.</span><span class=n>array</span><span class=p>([</span><span class=n>input_arr</span><span class=p>])</span>  <span class=c1># Convert single image to a batch.</span>
+</span></span><span class=line><span class=cl><span class=n>predictions</span> <span class=o>=</span> <span class=n>model</span><span class=o>.</span><span class=n>predict</span><span class=p>(</span><span class=n>input_arr</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>Todo esto es para convertir la imagen en un array de numpy y poder predecir con el modelo ya que en realidad los modelos no se entrenan con imagenes, sino con arrays que componen las imagenes. Ahora vemos la predicción.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>score</span> <span class=o>=</span> <span class=n>tf</span><span class=o>.</span><span class=n>nn</span><span class=o>.</span><span class=n>softmax</span><span class=p>(</span><span class=n>predictions</span><span class=p>[</span><span class=mi>0</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;Esta imagen parece ser </span><span class=si>{}</span><span class=s2> con un </span><span class=si>{:.2f}</span><span class=s2> </span><span class=si>% d</span><span class=s2>e exactitud.&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=o>.</span><span class=n>format</span><span class=p>(</span><span class=n>class_names</span><span class=p>[</span><span class=n>np</span><span class=o>.</span><span class=n>argmax</span><span class=p>(</span><span class=n>score</span><span class=p>)],</span> <span class=mi>100</span> <span class=o>*</span> <span class=n>np</span><span class=o>.</span><span class=n>max</span><span class=p>(</span><span class=n>score</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>Esta imagen parece ser def_front con un 100.00 % de exactitud.
+</span></span></code></pre></td></tr></table></div></div><p>Lo cual es correcto, ya que la imagen es de un defecto frontal. Con esto finalmente podemos decir que el modelo esta listo para ser usado en la vida real. Ahora lo guardamos para poder usarlo en el futuro.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>model</span><span class=o>.</span><span class=n>save</span><span class=p>(</span><span class=s1>&#39;/content/drive/MyDrive/IA/casting_data/model&#39;</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>Para cargar el modelo en el futuro solo tenemos que hacer lo siguiente.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>model</span> <span class=o>=</span> <span class=n>tf</span><span class=o>.</span><span class=n>keras</span><span class=o>.</span><span class=n>models</span><span class=o>.</span><span class=n>load_model</span><span class=p>(</span><span class=s1>&#39;/content/drive/MyDrive/IA/casting_data/model&#39;</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=extra><a href=#extra>#</a>
+Extra</h2><p>Como mencione este modelo tiene un sobreajuste, pero no es tan grave, para mejorar el modelo podemos hacer lo siguiente:</p><ul><li>Aumentar el número de épocas.</li><li>Agregar más datos de entrenamiento.</li><li>Agregar dropout.</li></ul><p>Una solución para el sobreajuste es el dropout, que consiste en eliminar aleatoriamente neuronas de la red, para que no se sobreajusten. Para agregarlo solo tenemos que agregar una capa de dropout después de cada capa de flatten y antes de las capas densas, dropout de 0.2, lo cual significa que el 20% de las neuronas serán eliminadas aleatoriamente.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>model</span> <span class=o>=</span> <span class=n>Sequential</span><span class=p>([</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>Rescaling</span><span class=p>(</span><span class=mf>1.</span><span class=o>/</span><span class=mi>255</span><span class=p>,</span> <span class=n>input_shape</span><span class=o>=</span><span class=p>(</span><span class=mi>300</span><span class=p>,</span> <span class=mi>300</span><span class=p>,</span> <span class=mi>3</span><span class=p>)),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>Conv2D</span><span class=p>(</span><span class=mi>16</span><span class=p>,</span> <span class=mi>3</span><span class=p>,</span> <span class=n>padding</span><span class=o>=</span><span class=s1>&#39;same&#39;</span><span class=p>,</span> <span class=n>activation</span><span class=o>=</span><span class=s1>&#39;relu&#39;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>MaxPooling2D</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>Conv2D</span><span class=p>(</span><span class=mi>32</span><span class=p>,</span> <span class=mi>3</span><span class=p>,</span> <span class=n>padding</span><span class=o>=</span><span class=s1>&#39;same&#39;</span><span class=p>,</span> <span class=n>activation</span><span class=o>=</span><span class=s1>&#39;relu&#39;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>MaxPooling2D</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>Conv2D</span><span class=p>(</span><span class=mi>64</span><span class=p>,</span> <span class=mi>3</span><span class=p>,</span> <span class=n>padding</span><span class=o>=</span><span class=s1>&#39;same&#39;</span><span class=p>,</span> <span class=n>activation</span><span class=o>=</span><span class=s1>&#39;relu&#39;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>MaxPooling2D</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>Flatten</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>Dropout</span><span class=p>(</span><span class=mf>0.2</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>Dense</span><span class=p>(</span><span class=mi>128</span><span class=p>,</span> <span class=n>activation</span><span class=o>=</span><span class=s1>&#39;relu&#39;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>  <span class=n>layers</span><span class=o>.</span><span class=n>Dense</span><span class=p>(</span><span class=n>num_classes</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>])</span>
+</span></span></code></pre></td></tr></table></div></div><p>Hacemos los mismo pasos para compilar y entrenar el modelo, esta vez nos da las siguientes métricas.</p><p align=center><img src=https://i.imgur.com/gwG8vbT.png></p><p>Donde se ve que al final las dos lineas son casi iguales, lo cual significa que no hay sobreajuste. Ahora evaluamos el modelo con los datos de validación.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>final.evaluate<span class=o>(</span>test_ds,return_dict<span class=o>=</span>True<span class=o>)</span>
+</span></span><span class=line><span class=cl>23/23 <span class=o>[==============================]</span> - 19s 815ms/step - loss: 0.0224 - accuracy: 0.9958
+</span></span><span class=line><span class=cl><span class=o>{</span><span class=s1>&#39;loss&#39;</span>: 0.02243557944893837, <span class=s1>&#39;accuracy&#39;</span>: 0.9958041906356812<span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>Con esto terminamos el tutorial, espero que les haya gustado y que les sirva para sus proyectos.</p></section><footer class=article-footer><section class=article-tags><a href=/tags/ia/>IA</a>
+<a href=/tags/python/>Python</a>
+<a href=/tags/tensorflow/>Tensorflow</a>
+<a href=/tags/keras/>Keras</a></section><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section><section class=article-lastmod><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<span>Última actualización Aug 07, 2023 00:00 UTC</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>Contenidos relacionados</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/p/tutorial-como-generar-n%C3%BAmeros-aleatorios-en-una-fpga/><div class=article-details><h2 class=article-title>Tutorial: Como generar números aleatorios en una FPGA</h2></div></a></article><article><a href=/p/tutorial-implementar-comunicaci%C3%B3n-uart-en-fpga/><div class=article-details><h2 class=article-title>Tutorial: Implementar comunicación UART en FPGA</h2></div></a></article><article class=has-image><a href=/p/tang-nano-primero-pasos/><div class=article-image><img src=/p/tang-nano-primero-pasos/cover.c514d916917173a48a42e0114b469961_hud7e36f7e20e71be184458283bdae4646_55974_250x150_fill_q75_box_smart1.jpg width=250 height=150 loading=lazy alt="Featured image of post Tutorial: Encendiendo un LED con la placa de desarrollo Tang Nano 9K" data-key=Tang-nano-primero-pasos data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ=="></div><div class=article-details><h2 class=article-title>Tutorial: Encendiendo un LED con la placa de desarrollo Tang Nano 9K</h2></div></a></article></div></div></aside><div class=disqus-container><div id=disqus_thread></div><script>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//fabianalvarez.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2022 -
+2024 Fabian's Blog</section><section class=powerby>Creado con <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Tema <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.25.0>Stack</a></b> diseñado por <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

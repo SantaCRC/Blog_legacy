@@ -1,0 +1,1031 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tang Nano 9K on Fabian's Blog</title><link>https://fabianalvarez.dev/tags/tang-nano-9k/</link><description>Recent content in Tang Nano 9K on Fabian's Blog</description><generator>Hugo -- gohugo.io</generator><language>es</language><lastBuildDate>Thu, 07 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://fabianalvarez.dev/tags/tang-nano-9k/index.xml" rel="self" type="application/rss+xml"/><item><title>Tutorial: Encendiendo un LED con la placa de desarrollo Tang Nano 9K</title><link>https://fabianalvarez.dev/p/tang-nano-primero-pasos/</link><pubDate>Mon, 06 Mar 2023 00:00:00 +0000</pubDate><guid>https://fabianalvarez.dev/p/tang-nano-primero-pasos/</guid><description>&lt;img src="https://fabianalvarez.dev/p/tang-nano-primero-pasos/cover.jpg" alt="Featured image of post Tutorial: Encendiendo un LED con la placa de desarrollo Tang Nano 9K" />&lt;p>La Tang Nano es una serie de placas de desarrollo FPGA desarrolladas por Sipeed, basadas en las FPGAs de Gowin, una empresa china reconocida por su bajo costo y alto rendimiento. En este tutorial, te mostraré cómo encender un LED utilizando la placa Tang Nano 9K, que cuenta con una FPGA GW1N-9K de Gowin, 9K LUTs, 240Kb de RAM, 128Kb de ROM, 2 PLLs y 2 SPIs. A través del IDE de Gowin, aprenderás a programar la placa y realizar una conexión sencilla para lograr este objetivo.&lt;/p>
+&lt;p>Pasos para encender un LED con la placa Tang Nano 9K:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Descarga e instala el IDE de Gowin:&lt;/p>
+&lt;ul>
+&lt;li>Visita la &lt;a class="link" href="https://www.gowinsemi.com/en/support/home/" target="_blank" rel="noopener"
+>página web de Gowin&lt;/a> para descargar el IDE.&lt;/li>
+&lt;li>La versión educativa es gratuita, pero también puedes solicitar una licencia gratuita de la versión profesional completando un registro.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Crea un nuevo proyecto en el IDE:&lt;/p>
+&lt;ul>
+&lt;li>Abre el IDE de Gowin y selecciona la pestaña &amp;ldquo;File&amp;rdquo;.&lt;/li>
+&lt;li>Haz clic en &amp;ldquo;New Project&amp;rdquo; y elige un nombre y una ubicación para tu proyecto, como &amp;ldquo;LED&amp;rdquo;.&lt;/li>
+&lt;li>Asegúrate de guardar el proyecto en la carpeta de proyectos de Gowin.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Selecciona el dispositivo adecuado:&lt;/p>
+&lt;ul>
+&lt;li>Al crear el proyecto, debes seleccionar el dispositivo que corresponda a tu versión de la placa Tang Nano.&lt;/li>
+&lt;li>Para la Tang Nano 9K con FPGA GW1N-LV9QN48C6/I5, elige la opción correspondiente en el IDE.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Crea un nuevo archivo Verilog:&lt;/p>
+&lt;ul>
+&lt;li>Haz clic en la pestaña &amp;ldquo;File&amp;rdquo; y selecciona &amp;ldquo;New File&amp;rdquo;.&lt;/li>
+&lt;li>Nombre del archivo: &amp;ldquo;LED.v&amp;rdquo;.&lt;/li>
+&lt;li>Guarda el archivo en la carpeta del proyecto.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Escribe el código Verilog para encender el LED:&lt;/p>
+&lt;ul>
+&lt;li>Abre el archivo &amp;ldquo;LED.v&amp;rdquo; y escribe el siguiente código:&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-verilog" data-lang="verilog">&lt;span class="line">&lt;span class="cl">&lt;span class="k">module&lt;/span> &lt;span class="n">LED&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">input&lt;/span> &lt;span class="n">btn&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">output&lt;/span> &lt;span class="kt">reg&lt;/span> &lt;span class="n">led&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">always&lt;/span> &lt;span class="p">@(&lt;/span>&lt;span class="k">posedge&lt;/span> &lt;span class="n">btn&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">led&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="o">~&lt;/span>&lt;span class="n">led&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">endmodule&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ol start="6">
+&lt;li>
+&lt;p>Crea el archivo de mapeo de pines:&lt;/p>
+&lt;ul>
+&lt;li>Utiliza el FloorPlanner del IDE para crear el archivo de mapeo de pines.&lt;/li>
+&lt;li>Ve a la pestaña &amp;ldquo;Tools&amp;rdquo; y selecciona &amp;ldquo;FloorPlanner&amp;rdquo;.&lt;/li>
+&lt;li>Para el botón 1 es el pin 4 y el led 1 es el pin 10, esto se puede ver en el &lt;a class="link" href="https://dl.sipeed.com/shareURL/TANG/Nano%209K/2_Schematic" target="_blank" rel="noopener"
+>esquemático de la placa&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Programa la FPGA:&lt;/p>
+&lt;ul>
+&lt;li>Ve a la pestaña &amp;ldquo;Tools&amp;rdquo; y selecciona &amp;ldquo;Program Device&amp;rdquo;.&lt;/li>
+&lt;li>Sigue las instrucciones para subir el programa a la FPGA.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Observa el resultado:&lt;/p>
+&lt;ul>
+&lt;li>Una vez que el programa esté cargado en la FPGA, el LED 1 de la placa Tang Nano 9K se encenderá y apagará cada vez que presiones el botón 1.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;p>Ten en cuenta que los botones y LEDs en esta FPGA tienen un comportamiento inverso, lo que significa que el valor es 0 cuando se presiona un botón y 1 cuando no se presiona. Del mismo modo, cuando el valor es 0, el LED se enciende, y cuando el valor es 1, el LED se apaga. Para ajustar esto, se ha realizado una modificación en el código Verilog invirtiendo el valor predeterminado del LED.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-verilog" data-lang="verilog">&lt;span class="line">&lt;span class="cl">&lt;span class="k">module&lt;/span> &lt;span class="n">LED&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">input&lt;/span> &lt;span class="n">btn&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">output&lt;/span> &lt;span class="kt">reg&lt;/span> &lt;span class="n">led&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">always&lt;/span> &lt;span class="p">@(&lt;/span>&lt;span class="k">posedge&lt;/span> &lt;span class="n">btn&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">led&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="o">~&lt;/span>&lt;span class="n">led&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">endmodule&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Para los mas técnicos las configuración de los botones de la placa Tang Nano 9K están en pull-up y los leds se encuentran en ánodo común, esto se ve en el esquema de la placa:&lt;/p>
+&lt;p>&lt;img src="https://i.imgur.com/6VTTzwh.png"
+loading="lazy"
+alt="picture 1"
+>&lt;/p>
+&lt;p>&lt;img src="https://i.imgur.com/08mRW9q.png"
+loading="lazy"
+alt="picture 2"
+>&lt;/p>
+&lt;p>Con este tutorial, has aprendido cómo encender un LED utilizando la placa de desarrollo Tang Nano 9K de Sipeed. También has descubierto una característica importante de esta placa, en la que el funcionamiento de los LEDs integrados y los botones está invertido en comparación con la mayoría de las placas de desarrollo. ¡Explora más posibilidades y sigue experimentando con esta potente herramienta de desarrollo FPGA!&lt;/p></description></item><item><title>ASIC Tamagothi un proyecto para TinyTapeout</title><link>https://fabianalvarez.dev/p/asic-tamagothi-un-proyecto-para-tinytapeout/</link><pubDate>Thu, 07 Sep 2023 00:00:00 +0000</pubDate><guid>https://fabianalvarez.dev/p/asic-tamagothi-un-proyecto-para-tinytapeout/</guid><description>&lt;p>Para el proyecto personal TinyTapeout 4, diseñé un ASIC Tamagotchi que reside en el chip. Dado el espacio limitado en el chip, este Tamagotchi es simple pero funcional. Además, representa un excelente punto de partida para aprender sobre el diseño de ASIC y explora conceptos interesantes, como la implementación de la comunicación serial UART y la generación de números pseudoaleatorios, que mencioné en un post anterior.&lt;/p>
+&lt;h2 id="acerca-del-tamagotchi">
+&lt;a href="#acerca-del-tamagotchi">#&lt;/a>
+Acerca del Tamagotchi
+&lt;/h2>&lt;p>El diseño del Tamagotchi es muy sencillo. Consiste en una pequeña memoria que almacena caracteres en formato ASCII para permitir la representación gráfica del Tamagotchi en la consola serial. También incluye una lógica de control basada en máquinas de estados para mostrar diferentes animaciones que representan los estados del Tamagotchi. Además, cuenta con una especie de &amp;ldquo;barra de necesidades&amp;rdquo; que muestra sus estados de hambre, sueño y aburrimiento. Estas necesidades aumentan con el tiempo y pueden reducirse mediante la entrada de comandos desde el teclado, correspondientes a cada necesidad. En caso de que alguna de estas necesidades no se satisfaga adecuadamente, el Tamagotchi morirá y será necesario reiniciar el chip para jugar nuevamente, tal como sucede en un Tamagotchi real.&lt;/p>
+&lt;h2 id="diseño">
+&lt;a href="#dise%c3%b1o">#&lt;/a>
+Diseño
+&lt;/h2>&lt;p>El corazón del Tamagotchi es, en gran medida, el generador de números pseudoaleatorios. Esto se debe a que controla cómo y cuáles de las estadísticas del Tamagotchi aumentarán de manera aparentemente &amp;ldquo;aleatoria&amp;rdquo;.&lt;/p>
+&lt;p>Este diseño, a pesar de su simplicidad, abarca una serie de conceptos y funciones interesantes que hacen que el proyecto sea valioso tanto desde el punto de vista educativo como funcional. Además, el ASIC Tamagotchi en el chip es un proyecto creativo y entretenido que permite explorar la creación de un sistema embebido en un entorno de recursos limitados.&lt;/p>
+&lt;h2 id="generador-de-números-pseudoaleatorios">
+&lt;a href="#generador-de-n%c3%bameros-pseudoaleatorios">#&lt;/a>
+Generador de números pseudoaleatorios
+&lt;/h2>&lt;p>El generador de números pseudoaleatorios es un Linear Feedback Shift Register (LFSR) de 8 bits. El LFSR es un circuito secuencial que genera una secuencia de bits que se repite después de un cierto número de ciclos de reloj. La secuencia de bits generada por un LFSR parece aleatoria, pero en realidad es determinista y periódica. La longitud del período (el número de ciclos de reloj antes de que la secuencia se repita) depende de cómo se configure el LFSR, específicamente de qué bits se utilizan para la retroalimentación.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-verilog" data-lang="verilog">&lt;span class="line">&lt;span class="cl">&lt;span class="k">module&lt;/span> &lt;span class="n">random&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">input&lt;/span> &lt;span class="kt">wire&lt;/span> &lt;span class="n">clk&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// Clock input
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">input&lt;/span> &lt;span class="kt">wire&lt;/span> &lt;span class="n">rst&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// Reset input
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">input&lt;/span> &lt;span class="kt">wire&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">seed&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 8-bit seed input
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">output&lt;/span> &lt;span class="kt">wire&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">rand_out&lt;/span> &lt;span class="c1">// 8-bit pseudo-random number output
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1">// 8-bit register to hold the LFSR state
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">always&lt;/span> &lt;span class="p">@(&lt;/span>&lt;span class="k">posedge&lt;/span> &lt;span class="n">clk&lt;/span> &lt;span class="k">or&lt;/span> &lt;span class="k">posedge&lt;/span> &lt;span class="n">rst&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">rst&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">lfsr_reg&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">seed&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1">// Initialize the LFSR with the seed
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">end&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// XOR feedback taps for an 8-bit LFSR: 8, 6, 5, 4
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">lfsr_reg&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">6&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">^&lt;/span> &lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">4&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">^&lt;/span> &lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">5&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">^&lt;/span> &lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">3&lt;/span>&lt;span class="p">]};&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">assign&lt;/span> &lt;span class="n">rand_out&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">endmodule&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="memoria-de-caracteres">
+&lt;a href="#memoria-de-caracteres">#&lt;/a>
+Memoria de caracteres
+&lt;/h2>&lt;p>La memoria de caracteres es una memoria ROM de 8 bits que almacena caracteres en formato ASCII para permitir la representación gráfica del Tamagotchi en la consola serial. La memoria de caracteres es una memoria de solo lectura, por lo que los caracteres se cargan en la memoria durante la síntesis. La memoria de caracteres se implementa como una memoria de solo lectura de 8 bits con 256 palabras, donde cada palabra es un carácter ASCII de 8 bits. La memoria de caracteres se carga con los caracteres ASCII que representan las diferentes animaciones del Tamagotchi.&lt;/p>
+&lt;h2 id="comunicación-serial-uart">
+&lt;a href="#comunicaci%c3%b3n-serial-uart">#&lt;/a>
+Comunicación serial UART
+&lt;/h2>&lt;p>La comunicación serial UART se implementa mediante una máquina de estados finitos (FSM) que controla la transmisión y recepción de datos. Use de base la transmisión que implemente en un post anterior&lt;/p>
+&lt;h2 id="lógica-de-control">
+&lt;a href="#l%c3%b3gica-de-control">#&lt;/a>
+Lógica de control
+&lt;/h2>&lt;p>La logica de control es bastante simple en su concepto, para cada necesidad existe un registro que se va decrementando con el tiempo, cuando el registro llega a cero el Tamagotchi muere. Para evitar que el registro llegue a cero se puede ingresar un comando desde el teclado que aumenta el registro.&lt;/p></description></item><item><title>Tutorial: Como generar números aleatorios en una FPGA</title><link>https://fabianalvarez.dev/p/tutorial-como-generar-n%C3%BAmeros-aleatorios-en-una-fpga/</link><pubDate>Sat, 08 Jul 2023 00:00:00 +0000</pubDate><guid>https://fabianalvarez.dev/p/tutorial-como-generar-n%C3%BAmeros-aleatorios-en-una-fpga/</guid><description>&lt;p>Generar números aleatorios es imposible, por lo menos en el ámbito computacional, claramente en muchos lenguajes de programación existen las funciones random, lo que hacen estas funciones es generar números pseudo-aleatorios y eso es lo que vamos a hacer&lt;/p>
+&lt;p>En verilog también existe una función para generar números pseudo-aleatorios, la función es &lt;code>$random&lt;/code>, esta función solo es para simulación no para implementación, por lo que no nos sirve para lo que queremos hacer.
+{:.warning}&lt;/p>
+&lt;p>Derivando tiene un video que lo explica mucho mejor.&lt;/p>
+&lt;div>{%- include extensions/youtube.html id='RzEjqJHW-NU' -%}&lt;/div>
+&lt;p>Para generar los números pseudo-aleatorios vamos a usar un linear-feedback shift register o LFSR, para la generación se usan los siguientes pasos:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>Registro de Desplazamiento&lt;/strong>: Un LFSR consta de un registro de desplazamiento que contiene una serie de bits. Los bits se desplazan hacia la derecha (o izquierda) en cada ciclo de reloj.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Retroalimentación Lineal&lt;/strong>: La característica principal de un LFSR es que algunos de los bits del registro se combinan mediante operaciones lógicas (generalmente XOR) y se retroalimentan en la entrada. Estos bits se denominan &amp;ldquo;taps&amp;rdquo; o &amp;ldquo;retroalimentaciones&amp;rdquo;.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Ciclo de Reloj&lt;/strong>: En cada ciclo de reloj, todos los bits en el registro se desplazan hacia la derecha (o izquierda) en una posición. El valor del nuevo bit de entrada (el que ingresa en el registro) se calcula a partir de la retroalimentación de los bits existentes en el registro según las reglas de retroalimentación definidas. Esto es lo que hace que el registro de desplazamiento sea &amp;ldquo;lineal&amp;rdquo;.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Secuencia Pseudoaleatoria&lt;/strong>: La secuencia de bits generada por un LFSR parece aleatoria, pero en realidad es determinista y periódica. La longitud del período (el número de ciclos de reloj antes de que la secuencia se repita) depende de cómo se configure el LFSR, específicamente de qué bits se utilizan para la retroalimentación.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>Salida&lt;/strong>: Puedes considerar la salida del LFSR como el bit más a la derecha en el registro de desplazamiento. Este bit se toma como la salida de la secuencia pseudoaleatoria. La secuencia de bits en esta salida se repite después de un cierto número de ciclos, pero puede parecer muy aleatoria durante ese período.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p align="center">
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Lfsr.gif" />
+&lt;/p>
+&lt;h2 id="implementación">
+&lt;a href="#implementaci%c3%b3n">#&lt;/a>
+Implementación
+&lt;/h2>&lt;p>Para implementar el LFSR vamos a usar el siguiente código:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-verilog" data-lang="verilog">&lt;span class="line">&lt;span class="cl">&lt;span class="k">module&lt;/span> &lt;span class="n">random&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">input&lt;/span> &lt;span class="kt">wire&lt;/span> &lt;span class="n">clk&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// Clock input
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">input&lt;/span> &lt;span class="kt">wire&lt;/span> &lt;span class="n">rst&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// Reset input
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">output&lt;/span> &lt;span class="kt">wire&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">rand_out&lt;/span> &lt;span class="c1">// 8-bit pseudo-random number output
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1">// 8-bit register to hold the LFSR state
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">always&lt;/span> &lt;span class="p">@(&lt;/span>&lt;span class="k">posedge&lt;/span> &lt;span class="n">clk&lt;/span> &lt;span class="k">or&lt;/span> &lt;span class="k">posedge&lt;/span> &lt;span class="n">rst&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">rst&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">lfsr_reg&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">8&lt;/span>&lt;span class="mb">&amp;#39;b1111&lt;/span>&lt;span class="n">_1111&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1">// Initialize LFSR with all ones
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">end&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// XOR feedback taps for an 8-bit LFSR: 8, 6, 5, 4
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">lfsr_reg&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">6&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">^&lt;/span> &lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">4&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">^&lt;/span> &lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">5&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">^&lt;/span> &lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">3&lt;/span>&lt;span class="p">]};&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">assign&lt;/span> &lt;span class="n">rand_out&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">endmodule&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Este código es para un LFSR de 8 bits, si quieres un LFSR de 16 bits solo tienes que cambiar el tamaño del registro y los taps, para un LFSR de 16 bits los taps son 16, 14, 13, 11.&lt;/p>
+&lt;p>El código es bastante simple, se compone de en realidad solo dos operaciones el desplazamiento y el XOR, el desplazamiento se hace con &lt;code>{lfsr_reg[6:0], lfsr_reg[7]}&lt;/code> y el XOR con &lt;code>lfsr_reg[7] ^ lfsr_reg[4] ^ lfsr_reg[5] ^ lfsr_reg[3]&lt;/code>. También tiene el reset que inicializa el registro con todos unos&lt;/p>
+&lt;p>El valor de reset sirve también como semilla de nuestro generador de números pseudo-aleatorios
+{:.info}&lt;/p></description></item><item><title>Tutorial: Implementar comunicación UART en FPGA</title><link>https://fabianalvarez.dev/p/tutorial-implementar-comunicaci%C3%B3n-uart-en-fpga/</link><pubDate>Tue, 06 Jun 2023 00:00:00 +0000</pubDate><guid>https://fabianalvarez.dev/p/tutorial-implementar-comunicaci%C3%B3n-uart-en-fpga/</guid><description>&lt;h2 id="introducción">
+&lt;a href="#introducci%c3%b3n">#&lt;/a>
+Introducción
+&lt;/h2>&lt;p>La comunicación UART es una de las más utilizadas en el mundo de la electrónica, ya que es una de las más sencillas de implementar y es muy útil para la comunicación entre dispositivos. En este tutorial aprenderás a implementar la comunicación UART en una FPGA, utilizando el lenguaje de descripción de hardware Verilog.&lt;/p>
+&lt;p align="center">
+&lt;img src="https://www.analog.com/-/media/images/analog-dialogue/en/volume-54/number-4/articles/uart-a-hardware-communication-protocol/335962-fig-02.svg?w=435" />
+&lt;/p>
+&lt;h2 id="cómo-funciona-la-comunicación-uart">
+&lt;a href="#c%c3%b3mo-funciona-la-comunicaci%c3%b3n-uart">#&lt;/a>
+¿Cómo funciona la comunicación UART?
+&lt;/h2>&lt;p>La comunicación UART es una comunicación asíncrona, lo que significa que no se necesita un reloj para sincronizar los datos. En su lugar, se utiliza un bit de inicio y un bit de parada para sincronizar los datos. La comunicación UART se basa en el envío de bytes, que son paquetes de 8 bits (puede variar pero 8 bits es la mas extendida). Cada byte se envía en serie, es decir, un bit a la vez. El bit de inicio es un bit de nivel bajo que indica que se va a enviar un byte. El bit de parada es un bit de nivel alto que indica que se ha terminado de enviar el byte. Entre el bit de inicio y el bit de parada se envían los 8 bits del byte. La siguiente imagen muestra un ejemplo de la comunicación UART.&lt;/p>
+&lt;p align="center">
+&lt;img src="https://ece353.engr.wisc.edu/wp-content/uploads/sites/607/2014/11/dataFrame-8N1.jpg" />
+&lt;/p>
+&lt;h2 id="baudrate">
+&lt;a href="#baudrate">#&lt;/a>
+Baudrate
+&lt;/h2>&lt;p>El baudrate es la velocidad a la que se envían los datos. Se mide en baudios, que es el número de bits que se envían por segundo. Por ejemplo, si el baudrate es de 9600 baudios, se envían 9600 bits por segundo. El baudrate se puede calcular con la siguiente fórmula:&lt;/p>
+&lt;p>$$baudrate = \frac{\text{Frecuencia del reloj}}{\text{divisiones de relog}}$$&lt;/p>
+&lt;p>El baudrate tiene valores estandar por lo cual lo que se calcula en realidad son las divisiones de reloj, lo cual cambia la formula a la siguiente:&lt;/p>
+&lt;p>$$\text{divisiones de reloj} = \frac{\text{Frecuencia del reloj}}{\text{baudrate}}$$&lt;/p>
+&lt;p>Para un reloj de 27 Mhz a un baudrate de 115200, las divisiones de reloj serían:&lt;/p>
+&lt;p>$$\text{divisiones de reloj} = \frac{27 \text{ Mhz}}{115200} = 234.375$$&lt;/p>
+&lt;p>Como las divisiones de reloj es un numero entero, el resultado se redondea a 234. Por lo tanto, para un reloj de 27 Mhz a un baudrate de 115200, las divisiones de reloj serían 234.&lt;/p>
+&lt;h2 id="leer-datos-de-la-uart">
+&lt;a href="#leer-datos-de-la-uart">#&lt;/a>
+Leer datos de la UART
+&lt;/h2>&lt;p>Para leer datos de la UART, se debe leer el bit de inicio, los 8 bits del byte y el bit de parada. Para la lectura y asegurarnos de leer correctamente los datos de la UART, se debe utilizar un reloj que sea 16 veces más rápido que el baudrate. Por ejemplo, si el baudrate es de 115200, el reloj debe ser de 1843200 Hz. Esto se debe a que se deben leer 10 bits (1 bit de inicio, 8 bits del byte y 1 bit de parada) y el reloj debe ser 16 veces más rápido que el baudrate. La lectura no se hace 16 veces por segundo, sino que se lee un bit cada 8 ciclos de reloj para asegurarnos que leemos el dato en la mitad del tiempo que tarda en llegar el siguiente bit. La siguiente imagen muestra un ejemplo de la lectura de datos de la UART.&lt;/p>
+&lt;p align="center">
+&lt;img src="https://svgshare.com/i/woE.svg" />
+&lt;/p>
+&lt;h2 id="escribir-datos-en-la-uart">
+&lt;a href="#escribir-datos-en-la-uart">#&lt;/a>
+Escribir datos en la UART
+&lt;/h2>&lt;p>La escritura es simular a la lectura, para escribir datos en la UART, se debe escribir el bit de inicio, los 8 bits del byte y el bit de parada. Para la escritura y asegurarnos de escribir correctamente los datos en la UART, se debe utilizar un reloj que sea 16 veces más rápido que el baudrate. Esto se debe a que se deben escribir 10 bits (1 bit de inicio, 8 bits del byte y 1 bit de parada) al igual que en la lectura. La escritura no se hace 16 veces por segundo, sino que se escribe un bit cada 8 ciclos de reloj para asegurarnos que escribimos el dato en la mitad del tiempo que tarda en llegar el siguiente bit. Ambos procesos (lectura y escritura) se pueden hacer con al mismo tiempo ya que son independientes entre si y por cables diferentes.&lt;/p>
+&lt;h2 id="implementación-en-verilog">
+&lt;a href="#implementaci%c3%b3n-en-verilog">#&lt;/a>
+Implementación en Verilog
+&lt;/h2>&lt;p>A continuación se muestra el código en Verilog para implementar la comunicación UART en una FPGA. El código se puede descargar desde &lt;a class="link" href="https://github.com/SantaCRC/fpga/tree/main/uart" target="_blank" rel="noopener"
+>Github&lt;/a>&lt;/p>
+&lt;h3 id="maquina-de-estados">
+&lt;a href="#maquina-de-estados">#&lt;/a>
+Maquina de estados
+&lt;/h3>&lt;p>Para implementar la comunicación UART vamos a usar dos maquinas de estados, una para la lectura y otra para la escritura. La maquina de estados para la lectura se llama &lt;code>RX&lt;/code> y la maquina de estados para la escritura se llama &lt;code>TX&lt;/code>. Ambas maquinas de estados se ejecutan al mismo tiempo ya que son independientes entre si y por cables diferentes.&lt;/p>
+&lt;h4 id="maquina-de-estados-rx">
+&lt;a href="#maquina-de-estados-rx">#&lt;/a>
+Maquina de estados RX
+&lt;/h4>&lt;p>Esta maquina tienen 5 estados, &lt;code>IDLE&lt;/code>, &lt;code>START_BIT&lt;/code>, &lt;code>READ_WAIT&lt;/code>, &lt;code>READ&lt;/code> y &lt;code>STOP_BIT&lt;/code>. El estado &lt;code>IDLE&lt;/code> es el estado inicial y se queda en este estado hasta que se detecta el bit de inicio. Cuando se detecta el bit de inicio, se pasa al estado &lt;code>START_BIT&lt;/code> y se empieza a leer los 8 bits del byte, con el estado intermedio &lt;code>READ_WAIT&lt;/code> que hace la division en 16 partes como explique en la teoría. Cuando se termina de leer los 8 bits del byte, se pasa al estado &lt;code>STOP_BIT&lt;/code> y se espera a que llegue el bit de parada. Cuando se detecta el bit de parada, se pasa al estado &lt;code>IDLE&lt;/code> y se termina la lectura del byte.&lt;/p>
+&lt;blockquote>
+&lt;p>Nota: Usamos el localparam &lt;code>HALF_DELAY_WAIT&lt;/code> y el &lt;code>DELAY_FRAMES&lt;/code> para hacer la division en 16 partes. El &lt;code>DELAY_FRAMES&lt;/code> es el numero de ciclos de reloj que se espera en el estado &lt;code>READ_WAIT&lt;/code> y el &lt;code>HALF_DELAY_WAIT&lt;/code> es la mitad del &lt;code>DELAY_FRAMES&lt;/code>. El &lt;code>DELAY_FRAMES&lt;/code> se calcula con la formula que mostré en la teoría.&lt;/p>
+&lt;/blockquote>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-verilog" data-lang="verilog">&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">RX_STATE_IDLE&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">RX_STATE_START_BIT&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">RX_STATE_READ_WAIT&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">2&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">RX_STATE_READ&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">3&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">RX_STATE_STOP_BIT&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">5&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">always&lt;/span> &lt;span class="p">@(&lt;/span>&lt;span class="k">posedge&lt;/span> &lt;span class="n">clk&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">case&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">rxState&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">RX_STATE_IDLE:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">uart_rx&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">RX_STATE_START_BIT&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxBitNumber&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">byteReady&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">RX_STATE_START_BIT:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">rxCounter&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">HALF_DELAY_WAIT&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">RX_STATE_READ_WAIT&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span> &lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">RX_STATE_READ_WAIT:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">((&lt;/span>&lt;span class="n">rxCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">DELAY_FRAMES&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">RX_STATE_READ&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">RX_STATE_READ:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">dataIn&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="n">uart_rx&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">dataIn&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">1&lt;/span>&lt;span class="p">]};&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxBitNumber&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">rxBitNumber&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">rxBitNumber&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mh">3&lt;/span>&lt;span class="mb">&amp;#39;b111&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">RX_STATE_STOP_BIT&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">RX_STATE_READ_WAIT&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">RX_STATE_STOP_BIT:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">((&lt;/span>&lt;span class="n">rxCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">DELAY_FRAMES&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">RX_STATE_IDLE&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">byteReady&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">endcase&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="maquina-de-estados-tx">
+&lt;a href="#maquina-de-estados-tx">#&lt;/a>
+Maquina de estados TX
+&lt;/h4>&lt;p>Con una aproximación similar realizamos la maquina de estados para la escritura. Esta maquina tienen 5 estados, &lt;code>IDLE&lt;/code>, &lt;code>START_BIT&lt;/code>, &lt;code>WRITE&lt;/code> , &lt;code>STOP_BIT&lt;/code> y por ultimo &lt;code>DEBOUNCE&lt;/code> que es el estado diferente, este estado lo que hace es mantener en alto la salida, lo que indica que no se están enviando datos, recordemos que el start bit es un bit de nivel bajo.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;span class="lnt">53
+&lt;/span>&lt;span class="lnt">54
+&lt;/span>&lt;span class="lnt">55
+&lt;/span>&lt;span class="lnt">56
+&lt;/span>&lt;span class="lnt">57
+&lt;/span>&lt;span class="lnt">58
+&lt;/span>&lt;span class="lnt">59
+&lt;/span>&lt;span class="lnt">60
+&lt;/span>&lt;span class="lnt">61
+&lt;/span>&lt;span class="lnt">62
+&lt;/span>&lt;span class="lnt">63
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-verilog" data-lang="verilog">&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">TX_STATE_IDLE&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">TX_STATE_START_BIT&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">TX_STATE_WRITE&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">2&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">TX_STATE_STOP_BIT&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">3&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">TX_STATE_DEBOUNCE&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">4&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">always&lt;/span> &lt;span class="p">@(&lt;/span>&lt;span class="k">posedge&lt;/span> &lt;span class="n">clk&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">case&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">txState&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">TX_STATE_IDLE:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">btn1&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">TX_STATE_START_BIT&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txByteCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txPinRegister&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">TX_STATE_START_BIT:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txPinRegister&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">((&lt;/span>&lt;span class="n">txCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">DELAY_FRAMES&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">TX_STATE_WRITE&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">dataOut&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">txByteCounter&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txBitNumber&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span> &lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">TX_STATE_WRITE:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txPinRegister&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">dataOut&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">txBitNumber&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">((&lt;/span>&lt;span class="n">txCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">DELAY_FRAMES&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">txBitNumber&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mh">3&lt;/span>&lt;span class="mb">&amp;#39;b111&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">TX_STATE_STOP_BIT&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">TX_STATE_WRITE&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txBitNumber&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">txBitNumber&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span> &lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">TX_STATE_STOP_BIT:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txPinRegister&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">((&lt;/span>&lt;span class="n">txCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">DELAY_FRAMES&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">txByteCounter&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">MEMORY_LENGTH&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">TX_STATE_DEBOUNCE&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txByteCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">txByteCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">TX_STATE_START_BIT&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span> &lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">TX_STATE_DEBOUNCE:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">txCounter&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mh">23&lt;/span>&lt;span class="mb">&amp;#39;b111111111111111111&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">btn1&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">TX_STATE_IDLE&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span> &lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">endcase&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="led-de-estado">
+&lt;a href="#led-de-estado">#&lt;/a>
+Led de estado
+&lt;/h3>&lt;p>Para verificar que nuestra comunicacion este funcionando para ambos sentidos, debido a que cada cable es independiente, usamos los leds integrados de en mi caso la FPGA Tang Nano 9K. Para esto usamos el siguiente codigo:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-verilog" data-lang="verilog">&lt;span class="line">&lt;span class="cl">&lt;span class="k">always&lt;/span> &lt;span class="p">@(&lt;/span>&lt;span class="k">posedge&lt;/span> &lt;span class="n">clk&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">byteReady&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">led&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="o">~&lt;/span>&lt;span class="n">dataIn&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">5&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>Nota: dataIn es el byte que se recibe de la UART y sale de la maquina de estados RX, para la tang nano 9k el led es activo bajo, por lo cual se debe negar el byte para que se encienda el led.&lt;/p>
+&lt;/blockquote>
+&lt;p>Para verificar el envio de datos vamos a usar el puerto serial para leer los datos, vamos a crear un arreglo de datos para enviar y lo vamos a enviar cada vez que se presione el boton 1. Para esto usamos el siguiente codigo:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-verilog" data-lang="verilog">&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">3&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">txState&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">24&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">dataOut&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="n">txPinRegister&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">2&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">txBitNumber&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">4&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">txByteCounter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">assign&lt;/span> &lt;span class="n">uart_tx&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">txPinRegister&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">MEMORY_LENGTH&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">18&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">testMemory&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">MEMORY_LENGTH&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mh">1&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">initial&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;F&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">1&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;a&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">2&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;b&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">3&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;i&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">4&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;a&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">5&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;n&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">6&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;a&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;l&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">8&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;v&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">9&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;a&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">10&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;r&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">11&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;e&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">12&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;z&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">13&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;.&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">14&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;d&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">15&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;e&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">16&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;v&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">17&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34; &amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>y con esto ya tenemos nuestra comunicación UART implementada en Verilog.&lt;/p>
+&lt;h2 id="pinout-de-la-fpga">
+&lt;a href="#pinout-de-la-fpga">#&lt;/a>
+Pinout de la FPGA
+&lt;/h2>&lt;p>En una FPGA cualquier pin sirve como &lt;code>RX&lt;/code> y &lt;code>TX&lt;/code>, en el caso de la Tang Nano 9K tiene una conexion directa con el puerto usb, por lo cual se puede conectar directamente a la computadora y usar el puerto serial para leer y escribir datos. En el caso de la Tang Nano 9K, el pin &lt;code>RX&lt;/code> es el pin &lt;code>18&lt;/code> y el pin &lt;code>TX&lt;/code> es el pin &lt;code>17&lt;/code>. La siguiente imagen muestra el pinout de la Tang Nano 9K.
+&lt;img src="https://imgur.com/cYhpNUv.png"
+loading="lazy"
+alt="Pinout de la Tang Nano 9K"
+>&lt;/p>
+&lt;h2 id="conclusión">
+&lt;a href="#conclusi%c3%b3n">#&lt;/a>
+Conclusión
+&lt;/h2>&lt;p>En este tutorial, has aprendido a implementar la comunicación UART en una FPGA utilizando el lenguaje de descripción de hardware Verilog. Comprendes cómo funciona la comunicación UART, cómo leer y escribir datos, y cómo implementarla en Verilog. Además, has aprendido a utilizar los LEDs integrados en la FPGA para verificar el funcionamiento de la comunicación. Si tienes alguna pregunta, no dudes en dejar un comentario, y estaré encantado de ayudarte a resolverla. ¡Buena suerte en tu proyecto de FPGA!&lt;/p>
+&lt;h2 id="codigo-completo">
+&lt;a href="#codigo-completo">#&lt;/a>
+Codigo completo
+&lt;/h2>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt"> 10
+&lt;/span>&lt;span class="lnt"> 11
+&lt;/span>&lt;span class="lnt"> 12
+&lt;/span>&lt;span class="lnt"> 13
+&lt;/span>&lt;span class="lnt"> 14
+&lt;/span>&lt;span class="lnt"> 15
+&lt;/span>&lt;span class="lnt"> 16
+&lt;/span>&lt;span class="lnt"> 17
+&lt;/span>&lt;span class="lnt"> 18
+&lt;/span>&lt;span class="lnt"> 19
+&lt;/span>&lt;span class="lnt"> 20
+&lt;/span>&lt;span class="lnt"> 21
+&lt;/span>&lt;span class="lnt"> 22
+&lt;/span>&lt;span class="lnt"> 23
+&lt;/span>&lt;span class="lnt"> 24
+&lt;/span>&lt;span class="lnt"> 25
+&lt;/span>&lt;span class="lnt"> 26
+&lt;/span>&lt;span class="lnt"> 27
+&lt;/span>&lt;span class="lnt"> 28
+&lt;/span>&lt;span class="lnt"> 29
+&lt;/span>&lt;span class="lnt"> 30
+&lt;/span>&lt;span class="lnt"> 31
+&lt;/span>&lt;span class="lnt"> 32
+&lt;/span>&lt;span class="lnt"> 33
+&lt;/span>&lt;span class="lnt"> 34
+&lt;/span>&lt;span class="lnt"> 35
+&lt;/span>&lt;span class="lnt"> 36
+&lt;/span>&lt;span class="lnt"> 37
+&lt;/span>&lt;span class="lnt"> 38
+&lt;/span>&lt;span class="lnt"> 39
+&lt;/span>&lt;span class="lnt"> 40
+&lt;/span>&lt;span class="lnt"> 41
+&lt;/span>&lt;span class="lnt"> 42
+&lt;/span>&lt;span class="lnt"> 43
+&lt;/span>&lt;span class="lnt"> 44
+&lt;/span>&lt;span class="lnt"> 45
+&lt;/span>&lt;span class="lnt"> 46
+&lt;/span>&lt;span class="lnt"> 47
+&lt;/span>&lt;span class="lnt"> 48
+&lt;/span>&lt;span class="lnt"> 49
+&lt;/span>&lt;span class="lnt"> 50
+&lt;/span>&lt;span class="lnt"> 51
+&lt;/span>&lt;span class="lnt"> 52
+&lt;/span>&lt;span class="lnt"> 53
+&lt;/span>&lt;span class="lnt"> 54
+&lt;/span>&lt;span class="lnt"> 55
+&lt;/span>&lt;span class="lnt"> 56
+&lt;/span>&lt;span class="lnt"> 57
+&lt;/span>&lt;span class="lnt"> 58
+&lt;/span>&lt;span class="lnt"> 59
+&lt;/span>&lt;span class="lnt"> 60
+&lt;/span>&lt;span class="lnt"> 61
+&lt;/span>&lt;span class="lnt"> 62
+&lt;/span>&lt;span class="lnt"> 63
+&lt;/span>&lt;span class="lnt"> 64
+&lt;/span>&lt;span class="lnt"> 65
+&lt;/span>&lt;span class="lnt"> 66
+&lt;/span>&lt;span class="lnt"> 67
+&lt;/span>&lt;span class="lnt"> 68
+&lt;/span>&lt;span class="lnt"> 69
+&lt;/span>&lt;span class="lnt"> 70
+&lt;/span>&lt;span class="lnt"> 71
+&lt;/span>&lt;span class="lnt"> 72
+&lt;/span>&lt;span class="lnt"> 73
+&lt;/span>&lt;span class="lnt"> 74
+&lt;/span>&lt;span class="lnt"> 75
+&lt;/span>&lt;span class="lnt"> 76
+&lt;/span>&lt;span class="lnt"> 77
+&lt;/span>&lt;span class="lnt"> 78
+&lt;/span>&lt;span class="lnt"> 79
+&lt;/span>&lt;span class="lnt"> 80
+&lt;/span>&lt;span class="lnt"> 81
+&lt;/span>&lt;span class="lnt"> 82
+&lt;/span>&lt;span class="lnt"> 83
+&lt;/span>&lt;span class="lnt"> 84
+&lt;/span>&lt;span class="lnt"> 85
+&lt;/span>&lt;span class="lnt"> 86
+&lt;/span>&lt;span class="lnt"> 87
+&lt;/span>&lt;span class="lnt"> 88
+&lt;/span>&lt;span class="lnt"> 89
+&lt;/span>&lt;span class="lnt"> 90
+&lt;/span>&lt;span class="lnt"> 91
+&lt;/span>&lt;span class="lnt"> 92
+&lt;/span>&lt;span class="lnt"> 93
+&lt;/span>&lt;span class="lnt"> 94
+&lt;/span>&lt;span class="lnt"> 95
+&lt;/span>&lt;span class="lnt"> 96
+&lt;/span>&lt;span class="lnt"> 97
+&lt;/span>&lt;span class="lnt"> 98
+&lt;/span>&lt;span class="lnt"> 99
+&lt;/span>&lt;span class="lnt">100
+&lt;/span>&lt;span class="lnt">101
+&lt;/span>&lt;span class="lnt">102
+&lt;/span>&lt;span class="lnt">103
+&lt;/span>&lt;span class="lnt">104
+&lt;/span>&lt;span class="lnt">105
+&lt;/span>&lt;span class="lnt">106
+&lt;/span>&lt;span class="lnt">107
+&lt;/span>&lt;span class="lnt">108
+&lt;/span>&lt;span class="lnt">109
+&lt;/span>&lt;span class="lnt">110
+&lt;/span>&lt;span class="lnt">111
+&lt;/span>&lt;span class="lnt">112
+&lt;/span>&lt;span class="lnt">113
+&lt;/span>&lt;span class="lnt">114
+&lt;/span>&lt;span class="lnt">115
+&lt;/span>&lt;span class="lnt">116
+&lt;/span>&lt;span class="lnt">117
+&lt;/span>&lt;span class="lnt">118
+&lt;/span>&lt;span class="lnt">119
+&lt;/span>&lt;span class="lnt">120
+&lt;/span>&lt;span class="lnt">121
+&lt;/span>&lt;span class="lnt">122
+&lt;/span>&lt;span class="lnt">123
+&lt;/span>&lt;span class="lnt">124
+&lt;/span>&lt;span class="lnt">125
+&lt;/span>&lt;span class="lnt">126
+&lt;/span>&lt;span class="lnt">127
+&lt;/span>&lt;span class="lnt">128
+&lt;/span>&lt;span class="lnt">129
+&lt;/span>&lt;span class="lnt">130
+&lt;/span>&lt;span class="lnt">131
+&lt;/span>&lt;span class="lnt">132
+&lt;/span>&lt;span class="lnt">133
+&lt;/span>&lt;span class="lnt">134
+&lt;/span>&lt;span class="lnt">135
+&lt;/span>&lt;span class="lnt">136
+&lt;/span>&lt;span class="lnt">137
+&lt;/span>&lt;span class="lnt">138
+&lt;/span>&lt;span class="lnt">139
+&lt;/span>&lt;span class="lnt">140
+&lt;/span>&lt;span class="lnt">141
+&lt;/span>&lt;span class="lnt">142
+&lt;/span>&lt;span class="lnt">143
+&lt;/span>&lt;span class="lnt">144
+&lt;/span>&lt;span class="lnt">145
+&lt;/span>&lt;span class="lnt">146
+&lt;/span>&lt;span class="lnt">147
+&lt;/span>&lt;span class="lnt">148
+&lt;/span>&lt;span class="lnt">149
+&lt;/span>&lt;span class="lnt">150
+&lt;/span>&lt;span class="lnt">151
+&lt;/span>&lt;span class="lnt">152
+&lt;/span>&lt;span class="lnt">153
+&lt;/span>&lt;span class="lnt">154
+&lt;/span>&lt;span class="lnt">155
+&lt;/span>&lt;span class="lnt">156
+&lt;/span>&lt;span class="lnt">157
+&lt;/span>&lt;span class="lnt">158
+&lt;/span>&lt;span class="lnt">159
+&lt;/span>&lt;span class="lnt">160
+&lt;/span>&lt;span class="lnt">161
+&lt;/span>&lt;span class="lnt">162
+&lt;/span>&lt;span class="lnt">163
+&lt;/span>&lt;span class="lnt">164
+&lt;/span>&lt;span class="lnt">165
+&lt;/span>&lt;span class="lnt">166
+&lt;/span>&lt;span class="lnt">167
+&lt;/span>&lt;span class="lnt">168
+&lt;/span>&lt;span class="lnt">169
+&lt;/span>&lt;span class="lnt">170
+&lt;/span>&lt;span class="lnt">171
+&lt;/span>&lt;span class="lnt">172
+&lt;/span>&lt;span class="lnt">173
+&lt;/span>&lt;span class="lnt">174
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-verilog" data-lang="verilog">&lt;span class="line">&lt;span class="cl">&lt;span class="no">`default_nettype&lt;/span> &lt;span class="n">none&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">module&lt;/span> &lt;span class="n">top&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">#(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">parameter&lt;/span> &lt;span class="n">DELAY_FRAMES&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">234&lt;/span> &lt;span class="c1">// 27,000,000 (27Mhz) / 115200 Baud rate
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">input&lt;/span> &lt;span class="n">clk&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">input&lt;/span> &lt;span class="n">uart_rx&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">output&lt;/span> &lt;span class="n">uart_tx&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">output&lt;/span> &lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">5&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">led&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">input&lt;/span> &lt;span class="n">btn1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">HALF_DELAY_WAIT&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">DELAY_FRAMES&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="mh">2&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">3&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">rxState&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">12&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">dataIn&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">2&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">rxBitNumber&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="n">byteReady&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">RX_STATE_IDLE&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">RX_STATE_START_BIT&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">RX_STATE_READ_WAIT&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">2&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">RX_STATE_READ&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">3&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">RX_STATE_STOP_BIT&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">5&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">always&lt;/span> &lt;span class="p">@(&lt;/span>&lt;span class="k">posedge&lt;/span> &lt;span class="n">clk&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">case&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">rxState&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">RX_STATE_IDLE:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">uart_rx&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">RX_STATE_START_BIT&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxBitNumber&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">byteReady&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">RX_STATE_START_BIT:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">rxCounter&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">HALF_DELAY_WAIT&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">RX_STATE_READ_WAIT&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span> &lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">RX_STATE_READ_WAIT:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">((&lt;/span>&lt;span class="n">rxCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">DELAY_FRAMES&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">RX_STATE_READ&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">RX_STATE_READ:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">dataIn&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="n">uart_rx&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">dataIn&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">1&lt;/span>&lt;span class="p">]};&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxBitNumber&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">rxBitNumber&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">rxBitNumber&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mh">3&lt;/span>&lt;span class="mb">&amp;#39;b111&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">RX_STATE_STOP_BIT&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">RX_STATE_READ_WAIT&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">RX_STATE_STOP_BIT:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">((&lt;/span>&lt;span class="n">rxCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">DELAY_FRAMES&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">RX_STATE_IDLE&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">rxCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">byteReady&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">endcase&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">always&lt;/span> &lt;span class="p">@(&lt;/span>&lt;span class="k">posedge&lt;/span> &lt;span class="n">clk&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">byteReady&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">led&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="o">~&lt;/span>&lt;span class="n">dataIn&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">5&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">3&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">txState&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">24&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">dataOut&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="n">txPinRegister&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">2&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">txBitNumber&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">4&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">txByteCounter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">assign&lt;/span> &lt;span class="n">uart_tx&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">txPinRegister&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">MEMORY_LENGTH&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">18&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">testMemory&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">MEMORY_LENGTH&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mh">1&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">initial&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;F&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">1&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;a&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">2&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;b&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">3&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;i&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">4&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;a&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">5&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;n&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">6&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;a&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;l&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">8&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;v&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">9&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;a&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">10&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;r&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">11&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;e&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">12&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;z&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">13&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;.&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">14&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;d&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">15&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;e&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">16&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34;v&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">17&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s">&amp;#34; &amp;#34;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">TX_STATE_IDLE&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">TX_STATE_START_BIT&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">TX_STATE_WRITE&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">2&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">TX_STATE_STOP_BIT&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">3&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">localparam&lt;/span> &lt;span class="n">TX_STATE_DEBOUNCE&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">4&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">always&lt;/span> &lt;span class="p">@(&lt;/span>&lt;span class="k">posedge&lt;/span> &lt;span class="n">clk&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">case&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">txState&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">TX_STATE_IDLE:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">btn1&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">TX_STATE_START_BIT&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txByteCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txPinRegister&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">TX_STATE_START_BIT:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txPinRegister&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">((&lt;/span>&lt;span class="n">txCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">DELAY_FRAMES&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">TX_STATE_WRITE&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">dataOut&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">testMemory&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">txByteCounter&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txBitNumber&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span> &lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">TX_STATE_WRITE:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txPinRegister&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">dataOut&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">txBitNumber&lt;/span>&lt;span class="p">];&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">((&lt;/span>&lt;span class="n">txCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">DELAY_FRAMES&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">txBitNumber&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mh">3&lt;/span>&lt;span class="mb">&amp;#39;b111&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">TX_STATE_STOP_BIT&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">TX_STATE_WRITE&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txBitNumber&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">txBitNumber&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span> &lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">TX_STATE_STOP_BIT:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txPinRegister&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">((&lt;/span>&lt;span class="n">txCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">DELAY_FRAMES&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">txByteCounter&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">MEMORY_LENGTH&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">TX_STATE_DEBOUNCE&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txByteCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">txByteCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">TX_STATE_START_BIT&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="mh">0&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span> &lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nl">TX_STATE_DEBOUNCE:&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">txCounter&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mh">23&lt;/span>&lt;span class="mb">&amp;#39;b111111111111111111&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">btn1&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txState&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">TX_STATE_IDLE&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span> &lt;span class="k">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">txCounter&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mh">1&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">endcase&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">endmodule&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item></channel></rss>

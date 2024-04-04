@@ -1,0 +1,682 @@
+<!doctype html><html lang=es dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="Descubre cómo implementar la comunicación UART en una FPGA"><title>Tutorial: Implementar comunicación UART en FPGA</title>
+<link rel=canonical href=https://fabianalvarez.dev/p/tutorial-implementar-comunicaci%C3%B3n-uart-en-fpga/><link rel=stylesheet href=/scss/style.min.8e60baf4cd3fc55968717a6e39762f4d28ed7ef6007566b6c7970ad0fe907198.css><meta property='og:title' content="Tutorial: Implementar comunicación UART en FPGA"><meta property='og:description' content="Descubre cómo implementar la comunicación UART en una FPGA"><meta property='og:url' content='https://fabianalvarez.dev/p/tutorial-implementar-comunicaci%C3%B3n-uart-en-fpga/'><meta property='og:site_name' content="Fabian's Blog"><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='FPGA'><meta property='article:tag' content='Verilog'><meta property='article:tag' content='Tang Nano 9K'><meta property='article:published_time' content='2023-06-06T00:00:00+00:00'><meta property='article:modified_time' content='2023-06-06T00:00:00+00:00'><meta name=twitter:title content="Tutorial: Implementar comunicación UART en FPGA"><meta name=twitter:description content="Descubre cómo implementar la comunicación UART en una FPGA"><link rel="shortcut icon" href=/favicon.ico></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Ocultar menú">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=https://es.gravatar.com/userimage/148097488/bbeb1fc5374f2b7ab6842cfb3528b735.jpeg width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🍥</span></figure><div class=site-meta><h1 class=site-name><a href=/>Fabian's Blog</a></h1><h2 class=site-description>Full time marker, part time engineer</h2></div></header><ol class=menu-social><li><a href=https://github.com/SantaCRC target=_blank title=GitHub rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/archives/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archivo</span></a></li><li><a href=/search/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Buscar</span></a></li><li><a href=/links/><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li class=menu-bottom-section><ol class=menu><li id=i18n-switch><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 5h7"/><path d="M9 3v2c0 4.418-2.239 8-5 8"/><path d="M5 9c-.003 2.144 2.952 3.908 6.7 4"/><path d="M12 20l4-9 4 9"/><path d="M19.1 18h-6.2"/></svg>
+<select name=language title=language onchange="window.location.href=this.selectedOptions[0].value"><option value=https://fabianalvarez.dev/en/>English</option><option value=https://fabianalvarez.dev/ selected>Español</option></select></li><li id=dark-mode-toggle><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Modo oscuro</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">Tabla de contenido</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#introducción>Introducción</a></li><li><a href=#cómo-funciona-la-comunicación-uart>¿Cómo funciona la comunicación UART?</a></li><li><a href=#baudrate>Baudrate</a></li><li><a href=#leer-datos-de-la-uart>Leer datos de la UART</a></li><li><a href=#escribir-datos-en-la-uart>Escribir datos en la UART</a></li><li><a href=#implementación-en-verilog>Implementación en Verilog</a><ol><li><a href=#maquina-de-estados>Maquina de estados</a><ol><li><a href=#maquina-de-estados-rx>Maquina de estados RX</a></li><li><a href=#maquina-de-estados-tx>Maquina de estados TX</a></li></ol></li><li><a href=#led-de-estado>Led de estado</a></li></ol></li><li><a href=#pinout-de-la-fpga>Pinout de la FPGA</a></li><li><a href=#conclusión>Conclusión</a></li><li><a href=#codigo-completo>Codigo completo</a></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/tutoriales/ style=background-color:#2a9d8f;color:#fff>Tutoriales</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/p/tutorial-implementar-comunicaci%C3%B3n-uart-en-fpga/>Tutorial: Implementar comunicación UART en FPGA</a></h2><h3 class=article-subtitle>Descubre cómo implementar la comunicación UART en una FPGA</h3></div><footer class=article-time><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Jun 06, 2023</time></div><div><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>Tiempo de lectura 13 minutos</time></div></footer></div></header><section class=article-content><h2 id=introducción><a href=#introducci%c3%b3n>#</a>
+Introducción</h2><p>La comunicación UART es una de las más utilizadas en el mundo de la electrónica, ya que es una de las más sencillas de implementar y es muy útil para la comunicación entre dispositivos. En este tutorial aprenderás a implementar la comunicación UART en una FPGA, utilizando el lenguaje de descripción de hardware Verilog.</p><p align=center><img src="https://www.analog.com/-/media/images/analog-dialogue/en/volume-54/number-4/articles/uart-a-hardware-communication-protocol/335962-fig-02.svg?w=435"></p><h2 id=cómo-funciona-la-comunicación-uart><a href=#c%c3%b3mo-funciona-la-comunicaci%c3%b3n-uart>#</a>
+¿Cómo funciona la comunicación UART?</h2><p>La comunicación UART es una comunicación asíncrona, lo que significa que no se necesita un reloj para sincronizar los datos. En su lugar, se utiliza un bit de inicio y un bit de parada para sincronizar los datos. La comunicación UART se basa en el envío de bytes, que son paquetes de 8 bits (puede variar pero 8 bits es la mas extendida). Cada byte se envía en serie, es decir, un bit a la vez. El bit de inicio es un bit de nivel bajo que indica que se va a enviar un byte. El bit de parada es un bit de nivel alto que indica que se ha terminado de enviar el byte. Entre el bit de inicio y el bit de parada se envían los 8 bits del byte. La siguiente imagen muestra un ejemplo de la comunicación UART.</p><p align=center><img src=https://ece353.engr.wisc.edu/wp-content/uploads/sites/607/2014/11/dataFrame-8N1.jpg></p><h2 id=baudrate><a href=#baudrate>#</a>
+Baudrate</h2><p>El baudrate es la velocidad a la que se envían los datos. Se mide en baudios, que es el número de bits que se envían por segundo. Por ejemplo, si el baudrate es de 9600 baudios, se envían 9600 bits por segundo. El baudrate se puede calcular con la siguiente fórmula:</p><p>$$baudrate = \frac{\text{Frecuencia del reloj}}{\text{divisiones de relog}}$$</p><p>El baudrate tiene valores estandar por lo cual lo que se calcula en realidad son las divisiones de reloj, lo cual cambia la formula a la siguiente:</p><p>$$\text{divisiones de reloj} = \frac{\text{Frecuencia del reloj}}{\text{baudrate}}$$</p><p>Para un reloj de 27 Mhz a un baudrate de 115200, las divisiones de reloj serían:</p><p>$$\text{divisiones de reloj} = \frac{27 \text{ Mhz}}{115200} = 234.375$$</p><p>Como las divisiones de reloj es un numero entero, el resultado se redondea a 234. Por lo tanto, para un reloj de 27 Mhz a un baudrate de 115200, las divisiones de reloj serían 234.</p><h2 id=leer-datos-de-la-uart><a href=#leer-datos-de-la-uart>#</a>
+Leer datos de la UART</h2><p>Para leer datos de la UART, se debe leer el bit de inicio, los 8 bits del byte y el bit de parada. Para la lectura y asegurarnos de leer correctamente los datos de la UART, se debe utilizar un reloj que sea 16 veces más rápido que el baudrate. Por ejemplo, si el baudrate es de 115200, el reloj debe ser de 1843200 Hz. Esto se debe a que se deben leer 10 bits (1 bit de inicio, 8 bits del byte y 1 bit de parada) y el reloj debe ser 16 veces más rápido que el baudrate. La lectura no se hace 16 veces por segundo, sino que se lee un bit cada 8 ciclos de reloj para asegurarnos que leemos el dato en la mitad del tiempo que tarda en llegar el siguiente bit. La siguiente imagen muestra un ejemplo de la lectura de datos de la UART.</p><p align=center><img src=https://svgshare.com/i/woE.svg></p><h2 id=escribir-datos-en-la-uart><a href=#escribir-datos-en-la-uart>#</a>
+Escribir datos en la UART</h2><p>La escritura es simular a la lectura, para escribir datos en la UART, se debe escribir el bit de inicio, los 8 bits del byte y el bit de parada. Para la escritura y asegurarnos de escribir correctamente los datos en la UART, se debe utilizar un reloj que sea 16 veces más rápido que el baudrate. Esto se debe a que se deben escribir 10 bits (1 bit de inicio, 8 bits del byte y 1 bit de parada) al igual que en la lectura. La escritura no se hace 16 veces por segundo, sino que se escribe un bit cada 8 ciclos de reloj para asegurarnos que escribimos el dato en la mitad del tiempo que tarda en llegar el siguiente bit. Ambos procesos (lectura y escritura) se pueden hacer con al mismo tiempo ya que son independientes entre si y por cables diferentes.</p><h2 id=implementación-en-verilog><a href=#implementaci%c3%b3n-en-verilog>#</a>
+Implementación en Verilog</h2><p>A continuación se muestra el código en Verilog para implementar la comunicación UART en una FPGA. El código se puede descargar desde <a class=link href=https://github.com/SantaCRC/fpga/tree/main/uart target=_blank rel=noopener>Github</a></p><h3 id=maquina-de-estados><a href=#maquina-de-estados>#</a>
+Maquina de estados</h3><p>Para implementar la comunicación UART vamos a usar dos maquinas de estados, una para la lectura y otra para la escritura. La maquina de estados para la lectura se llama <code>RX</code> y la maquina de estados para la escritura se llama <code>TX</code>. Ambas maquinas de estados se ejecutan al mismo tiempo ya que son independientes entre si y por cables diferentes.</p><h4 id=maquina-de-estados-rx><a href=#maquina-de-estados-rx>#</a>
+Maquina de estados RX</h4><p>Esta maquina tienen 5 estados, <code>IDLE</code>, <code>START_BIT</code>, <code>READ_WAIT</code>, <code>READ</code> y <code>STOP_BIT</code>. El estado <code>IDLE</code> es el estado inicial y se queda en este estado hasta que se detecta el bit de inicio. Cuando se detecta el bit de inicio, se pasa al estado <code>START_BIT</code> y se empieza a leer los 8 bits del byte, con el estado intermedio <code>READ_WAIT</code> que hace la division en 16 partes como explique en la teoría. Cuando se termina de leer los 8 bits del byte, se pasa al estado <code>STOP_BIT</code> y se espera a que llegue el bit de parada. Cuando se detecta el bit de parada, se pasa al estado <code>IDLE</code> y se termina la lectura del byte.</p><blockquote><p>Nota: Usamos el localparam <code>HALF_DELAY_WAIT</code> y el <code>DELAY_FRAMES</code> para hacer la division en 16 partes. El <code>DELAY_FRAMES</code> es el numero de ciclos de reloj que se espera en el estado <code>READ_WAIT</code> y el <code>HALF_DELAY_WAIT</code> es la mitad del <code>DELAY_FRAMES</code>. El <code>DELAY_FRAMES</code> se calcula con la formula que mostré en la teoría.</p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-verilog data-lang=verilog><span class=line><span class=cl><span class=k>localparam</span> <span class=n>RX_STATE_IDLE</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>RX_STATE_START_BIT</span> <span class=o>=</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>RX_STATE_READ_WAIT</span> <span class=o>=</span> <span class=mh>2</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>RX_STATE_READ</span> <span class=o>=</span> <span class=mh>3</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>RX_STATE_STOP_BIT</span> <span class=o>=</span> <span class=mh>5</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>always</span> <span class=p>@(</span><span class=k>posedge</span> <span class=n>clk</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>    <span class=k>case</span> <span class=p>(</span><span class=n>rxState</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=nl>RX_STATE_IDLE:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>uart_rx</span> <span class=o>==</span> <span class=mh>0</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxState</span> <span class=o>&lt;=</span> <span class=n>RX_STATE_START_BIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxCounter</span> <span class=o>&lt;=</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxBitNumber</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>byteReady</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span> 
+</span></span><span class=line><span class=cl>        <span class=nl>RX_STATE_START_BIT:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>rxCounter</span> <span class=o>==</span> <span class=n>HALF_DELAY_WAIT</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxState</span> <span class=o>&lt;=</span> <span class=n>RX_STATE_READ_WAIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxCounter</span> <span class=o>&lt;=</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span> <span class=k>else</span> 
+</span></span><span class=line><span class=cl>                <span class=n>rxCounter</span> <span class=o>&lt;=</span> <span class=n>rxCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=nl>RX_STATE_READ_WAIT:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=n>rxCounter</span> <span class=o>&lt;=</span> <span class=n>rxCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>((</span><span class=n>rxCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>)</span> <span class=o>==</span> <span class=n>DELAY_FRAMES</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxState</span> <span class=o>&lt;=</span> <span class=n>RX_STATE_READ</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=nl>RX_STATE_READ:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=n>rxCounter</span> <span class=o>&lt;=</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>dataIn</span> <span class=o>&lt;=</span> <span class=p>{</span><span class=n>uart_rx</span><span class=p>,</span> <span class=n>dataIn</span><span class=p>[</span><span class=mh>7</span><span class=o>:</span><span class=mh>1</span><span class=p>]};</span>
+</span></span><span class=line><span class=cl>            <span class=n>rxBitNumber</span> <span class=o>&lt;=</span> <span class=n>rxBitNumber</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>rxBitNumber</span> <span class=o>==</span> <span class=mh>3</span><span class=mb>&#39;b111</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxState</span> <span class=o>&lt;=</span> <span class=n>RX_STATE_STOP_BIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>else</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxState</span> <span class=o>&lt;=</span> <span class=n>RX_STATE_READ_WAIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=nl>RX_STATE_STOP_BIT:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=n>rxCounter</span> <span class=o>&lt;=</span> <span class=n>rxCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>((</span><span class=n>rxCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>)</span> <span class=o>==</span> <span class=n>DELAY_FRAMES</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxState</span> <span class=o>&lt;=</span> <span class=n>RX_STATE_IDLE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxCounter</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>byteReady</span> <span class=o>&lt;=</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span>
+</span></span><span class=line><span class=cl>    <span class=k>endcase</span>
+</span></span><span class=line><span class=cl><span class=k>end</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=maquina-de-estados-tx><a href=#maquina-de-estados-tx>#</a>
+Maquina de estados TX</h4><p>Con una aproximación similar realizamos la maquina de estados para la escritura. Esta maquina tienen 5 estados, <code>IDLE</code>, <code>START_BIT</code>, <code>WRITE</code> , <code>STOP_BIT</code> y por ultimo <code>DEBOUNCE</code> que es el estado diferente, este estado lo que hace es mantener en alto la salida, lo que indica que no se están enviando datos, recordemos que el start bit es un bit de nivel bajo.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-verilog data-lang=verilog><span class=line><span class=cl><span class=k>localparam</span> <span class=n>TX_STATE_IDLE</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>TX_STATE_START_BIT</span> <span class=o>=</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>TX_STATE_WRITE</span> <span class=o>=</span> <span class=mh>2</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>TX_STATE_STOP_BIT</span> <span class=o>=</span> <span class=mh>3</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>TX_STATE_DEBOUNCE</span> <span class=o>=</span> <span class=mh>4</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>always</span> <span class=p>@(</span><span class=k>posedge</span> <span class=n>clk</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>    <span class=k>case</span> <span class=p>(</span><span class=n>txState</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=nl>TX_STATE_IDLE:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>btn1</span> <span class=o>==</span> <span class=mh>0</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=n>txState</span> <span class=o>&lt;=</span> <span class=n>TX_STATE_START_BIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>txCounter</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>txByteCounter</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span>
+</span></span><span class=line><span class=cl>            <span class=k>else</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=n>txPinRegister</span> <span class=o>&lt;=</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span> 
+</span></span><span class=line><span class=cl>        <span class=nl>TX_STATE_START_BIT:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=n>txPinRegister</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>((</span><span class=n>txCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>)</span> <span class=o>==</span> <span class=n>DELAY_FRAMES</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=n>txState</span> <span class=o>&lt;=</span> <span class=n>TX_STATE_WRITE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>dataOut</span> <span class=o>&lt;=</span> <span class=n>testMemory</span><span class=p>[</span><span class=n>txByteCounter</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>                <span class=n>txBitNumber</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>txCounter</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span> <span class=k>else</span> 
+</span></span><span class=line><span class=cl>                <span class=n>txCounter</span> <span class=o>&lt;=</span> <span class=n>txCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=nl>TX_STATE_WRITE:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=n>txPinRegister</span> <span class=o>&lt;=</span> <span class=n>dataOut</span><span class=p>[</span><span class=n>txBitNumber</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>((</span><span class=n>txCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>)</span> <span class=o>==</span> <span class=n>DELAY_FRAMES</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=k>if</span> <span class=p>(</span><span class=n>txBitNumber</span> <span class=o>==</span> <span class=mh>3</span><span class=mb>&#39;b111</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                    <span class=n>txState</span> <span class=o>&lt;=</span> <span class=n>TX_STATE_STOP_BIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=k>end</span> <span class=k>else</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                    <span class=n>txState</span> <span class=o>&lt;=</span> <span class=n>TX_STATE_WRITE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                    <span class=n>txBitNumber</span> <span class=o>&lt;=</span> <span class=n>txBitNumber</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=k>end</span>
+</span></span><span class=line><span class=cl>                <span class=n>txCounter</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span> <span class=k>else</span> 
+</span></span><span class=line><span class=cl>                <span class=n>txCounter</span> <span class=o>&lt;=</span> <span class=n>txCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=nl>TX_STATE_STOP_BIT:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=n>txPinRegister</span> <span class=o>&lt;=</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>((</span><span class=n>txCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>)</span> <span class=o>==</span> <span class=n>DELAY_FRAMES</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=k>if</span> <span class=p>(</span><span class=n>txByteCounter</span> <span class=o>==</span> <span class=n>MEMORY_LENGTH</span> <span class=o>-</span> <span class=mh>1</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                    <span class=n>txState</span> <span class=o>&lt;=</span> <span class=n>TX_STATE_DEBOUNCE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=k>end</span> <span class=k>else</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                    <span class=n>txByteCounter</span> <span class=o>&lt;=</span> <span class=n>txByteCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                    <span class=n>txState</span> <span class=o>&lt;=</span> <span class=n>TX_STATE_START_BIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=k>end</span>
+</span></span><span class=line><span class=cl>                <span class=n>txCounter</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span> <span class=k>else</span> 
+</span></span><span class=line><span class=cl>                <span class=n>txCounter</span> <span class=o>&lt;=</span> <span class=n>txCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=nl>TX_STATE_DEBOUNCE:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>txCounter</span> <span class=o>==</span> <span class=mh>23</span><span class=mb>&#39;b111111111111111111</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=k>if</span> <span class=p>(</span><span class=n>btn1</span> <span class=o>==</span> <span class=mh>1</span><span class=p>)</span> 
+</span></span><span class=line><span class=cl>                    <span class=n>txState</span> <span class=o>&lt;=</span> <span class=n>TX_STATE_IDLE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span> <span class=k>else</span>
+</span></span><span class=line><span class=cl>                <span class=n>txCounter</span> <span class=o>&lt;=</span> <span class=n>txCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span>
+</span></span><span class=line><span class=cl>    <span class=k>endcase</span>      
+</span></span><span class=line><span class=cl><span class=k>end</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=led-de-estado><a href=#led-de-estado>#</a>
+Led de estado</h3><p>Para verificar que nuestra comunicacion este funcionando para ambos sentidos, debido a que cada cable es independiente, usamos los leds integrados de en mi caso la FPGA Tang Nano 9K. Para esto usamos el siguiente codigo:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-verilog data-lang=verilog><span class=line><span class=cl><span class=k>always</span> <span class=p>@(</span><span class=k>posedge</span> <span class=n>clk</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>byteReady</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>        <span class=n>led</span> <span class=o>&lt;=</span> <span class=o>~</span><span class=n>dataIn</span><span class=p>[</span><span class=mh>5</span><span class=o>:</span><span class=mh>0</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>    <span class=k>end</span>
+</span></span><span class=line><span class=cl><span class=k>end</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>Nota: dataIn es el byte que se recibe de la UART y sale de la maquina de estados RX, para la tang nano 9k el led es activo bajo, por lo cual se debe negar el byte para que se encienda el led.</p></blockquote><p>Para verificar el envio de datos vamos a usar el puerto serial para leer los datos, vamos a crear un arreglo de datos para enviar y lo vamos a enviar cada vez que se presione el boton 1. Para esto usamos el siguiente codigo:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-verilog data-lang=verilog><span class=line><span class=cl><span class=kt>reg</span> <span class=p>[</span><span class=mh>3</span><span class=o>:</span><span class=mh>0</span><span class=p>]</span> <span class=n>txState</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>reg</span> <span class=p>[</span><span class=mh>24</span><span class=o>:</span><span class=mh>0</span><span class=p>]</span> <span class=n>txCounter</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>reg</span> <span class=p>[</span><span class=mh>7</span><span class=o>:</span><span class=mh>0</span><span class=p>]</span> <span class=n>dataOut</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>reg</span> <span class=n>txPinRegister</span> <span class=o>=</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>reg</span> <span class=p>[</span><span class=mh>2</span><span class=o>:</span><span class=mh>0</span><span class=p>]</span> <span class=n>txBitNumber</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>reg</span> <span class=p>[</span><span class=mh>4</span><span class=o>:</span><span class=mh>0</span><span class=p>]</span> <span class=n>txByteCounter</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>assign</span> <span class=n>uart_tx</span> <span class=o>=</span> <span class=n>txPinRegister</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>MEMORY_LENGTH</span> <span class=o>=</span> <span class=mh>18</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>reg</span> <span class=p>[</span><span class=mh>7</span><span class=o>:</span><span class=mh>0</span><span class=p>]</span> <span class=n>testMemory</span> <span class=p>[</span><span class=n>MEMORY_LENGTH</span><span class=o>-</span><span class=mh>1</span><span class=o>:</span><span class=mh>0</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>initial</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>0</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;F&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>1</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;a&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>2</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;b&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>3</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;i&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>4</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;a&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>5</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;n&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>6</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;a&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>7</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;l&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>8</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;v&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>9</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;a&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>10</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;r&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>11</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;e&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>12</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;z&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>13</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;.&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>14</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;d&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>15</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;e&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>16</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;v&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>17</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34; &#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>end</span>
+</span></span></code></pre></td></tr></table></div></div><p>y con esto ya tenemos nuestra comunicación UART implementada en Verilog.</p><h2 id=pinout-de-la-fpga><a href=#pinout-de-la-fpga>#</a>
+Pinout de la FPGA</h2><p>En una FPGA cualquier pin sirve como <code>RX</code> y <code>TX</code>, en el caso de la Tang Nano 9K tiene una conexion directa con el puerto usb, por lo cual se puede conectar directamente a la computadora y usar el puerto serial para leer y escribir datos. En el caso de la Tang Nano 9K, el pin <code>RX</code> es el pin <code>18</code> y el pin <code>TX</code> es el pin <code>17</code>. La siguiente imagen muestra el pinout de la Tang Nano 9K.
+<img src=https://imgur.com/cYhpNUv.png loading=lazy alt="Pinout de la Tang Nano 9K"></p><h2 id=conclusión><a href=#conclusi%c3%b3n>#</a>
+Conclusión</h2><p>En este tutorial, has aprendido a implementar la comunicación UART en una FPGA utilizando el lenguaje de descripción de hardware Verilog. Comprendes cómo funciona la comunicación UART, cómo leer y escribir datos, y cómo implementarla en Verilog. Además, has aprendido a utilizar los LEDs integrados en la FPGA para verificar el funcionamiento de la comunicación. Si tienes alguna pregunta, no dudes en dejar un comentario, y estaré encantado de ayudarte a resolverla. ¡Buena suerte en tu proyecto de FPGA!</p><h2 id=codigo-completo><a href=#codigo-completo>#</a>
+Codigo completo</h2><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span><span class=lnt>135
+</span><span class=lnt>136
+</span><span class=lnt>137
+</span><span class=lnt>138
+</span><span class=lnt>139
+</span><span class=lnt>140
+</span><span class=lnt>141
+</span><span class=lnt>142
+</span><span class=lnt>143
+</span><span class=lnt>144
+</span><span class=lnt>145
+</span><span class=lnt>146
+</span><span class=lnt>147
+</span><span class=lnt>148
+</span><span class=lnt>149
+</span><span class=lnt>150
+</span><span class=lnt>151
+</span><span class=lnt>152
+</span><span class=lnt>153
+</span><span class=lnt>154
+</span><span class=lnt>155
+</span><span class=lnt>156
+</span><span class=lnt>157
+</span><span class=lnt>158
+</span><span class=lnt>159
+</span><span class=lnt>160
+</span><span class=lnt>161
+</span><span class=lnt>162
+</span><span class=lnt>163
+</span><span class=lnt>164
+</span><span class=lnt>165
+</span><span class=lnt>166
+</span><span class=lnt>167
+</span><span class=lnt>168
+</span><span class=lnt>169
+</span><span class=lnt>170
+</span><span class=lnt>171
+</span><span class=lnt>172
+</span><span class=lnt>173
+</span><span class=lnt>174
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-verilog data-lang=verilog><span class=line><span class=cl><span class=no>`default_nettype</span> <span class=n>none</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>module</span> <span class=n>top</span>
+</span></span><span class=line><span class=cl><span class=p>#(</span>
+</span></span><span class=line><span class=cl>    <span class=k>parameter</span> <span class=n>DELAY_FRAMES</span> <span class=o>=</span> <span class=mh>234</span> <span class=c1>// 27,000,000 (27Mhz) / 115200 Baud rate
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=k>input</span>  <span class=n>clk</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=k>input</span>  <span class=n>uart_rx</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=k>output</span> <span class=n>uart_tx</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=k>output</span> <span class=kt>reg</span> <span class=p>[</span><span class=mh>5</span><span class=o>:</span><span class=mh>0</span><span class=p>]</span> <span class=n>led</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=k>input</span> <span class=n>btn1</span>
+</span></span><span class=line><span class=cl><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>HALF_DELAY_WAIT</span> <span class=o>=</span> <span class=p>(</span><span class=n>DELAY_FRAMES</span> <span class=o>/</span> <span class=mh>2</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>reg</span> <span class=p>[</span><span class=mh>3</span><span class=o>:</span><span class=mh>0</span><span class=p>]</span> <span class=n>rxState</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>reg</span> <span class=p>[</span><span class=mh>12</span><span class=o>:</span><span class=mh>0</span><span class=p>]</span> <span class=n>rxCounter</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>reg</span> <span class=p>[</span><span class=mh>7</span><span class=o>:</span><span class=mh>0</span><span class=p>]</span> <span class=n>dataIn</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>reg</span> <span class=p>[</span><span class=mh>2</span><span class=o>:</span><span class=mh>0</span><span class=p>]</span> <span class=n>rxBitNumber</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>reg</span> <span class=n>byteReady</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>RX_STATE_IDLE</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>RX_STATE_START_BIT</span> <span class=o>=</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>RX_STATE_READ_WAIT</span> <span class=o>=</span> <span class=mh>2</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>RX_STATE_READ</span> <span class=o>=</span> <span class=mh>3</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>RX_STATE_STOP_BIT</span> <span class=o>=</span> <span class=mh>5</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>always</span> <span class=p>@(</span><span class=k>posedge</span> <span class=n>clk</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>    <span class=k>case</span> <span class=p>(</span><span class=n>rxState</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=nl>RX_STATE_IDLE:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>uart_rx</span> <span class=o>==</span> <span class=mh>0</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxState</span> <span class=o>&lt;=</span> <span class=n>RX_STATE_START_BIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxCounter</span> <span class=o>&lt;=</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxBitNumber</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>byteReady</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span> 
+</span></span><span class=line><span class=cl>        <span class=nl>RX_STATE_START_BIT:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>rxCounter</span> <span class=o>==</span> <span class=n>HALF_DELAY_WAIT</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxState</span> <span class=o>&lt;=</span> <span class=n>RX_STATE_READ_WAIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxCounter</span> <span class=o>&lt;=</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span> <span class=k>else</span> 
+</span></span><span class=line><span class=cl>                <span class=n>rxCounter</span> <span class=o>&lt;=</span> <span class=n>rxCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=nl>RX_STATE_READ_WAIT:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=n>rxCounter</span> <span class=o>&lt;=</span> <span class=n>rxCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>((</span><span class=n>rxCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>)</span> <span class=o>==</span> <span class=n>DELAY_FRAMES</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxState</span> <span class=o>&lt;=</span> <span class=n>RX_STATE_READ</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=nl>RX_STATE_READ:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=n>rxCounter</span> <span class=o>&lt;=</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>dataIn</span> <span class=o>&lt;=</span> <span class=p>{</span><span class=n>uart_rx</span><span class=p>,</span> <span class=n>dataIn</span><span class=p>[</span><span class=mh>7</span><span class=o>:</span><span class=mh>1</span><span class=p>]};</span>
+</span></span><span class=line><span class=cl>            <span class=n>rxBitNumber</span> <span class=o>&lt;=</span> <span class=n>rxBitNumber</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>rxBitNumber</span> <span class=o>==</span> <span class=mh>3</span><span class=mb>&#39;b111</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxState</span> <span class=o>&lt;=</span> <span class=n>RX_STATE_STOP_BIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>else</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxState</span> <span class=o>&lt;=</span> <span class=n>RX_STATE_READ_WAIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=nl>RX_STATE_STOP_BIT:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=n>rxCounter</span> <span class=o>&lt;=</span> <span class=n>rxCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>((</span><span class=n>rxCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>)</span> <span class=o>==</span> <span class=n>DELAY_FRAMES</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxState</span> <span class=o>&lt;=</span> <span class=n>RX_STATE_IDLE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>rxCounter</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>byteReady</span> <span class=o>&lt;=</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span>
+</span></span><span class=line><span class=cl>    <span class=k>endcase</span>
+</span></span><span class=line><span class=cl><span class=k>end</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>always</span> <span class=p>@(</span><span class=k>posedge</span> <span class=n>clk</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>byteReady</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>        <span class=n>led</span> <span class=o>&lt;=</span> <span class=o>~</span><span class=n>dataIn</span><span class=p>[</span><span class=mh>5</span><span class=o>:</span><span class=mh>0</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>    <span class=k>end</span>
+</span></span><span class=line><span class=cl><span class=k>end</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>reg</span> <span class=p>[</span><span class=mh>3</span><span class=o>:</span><span class=mh>0</span><span class=p>]</span> <span class=n>txState</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>reg</span> <span class=p>[</span><span class=mh>24</span><span class=o>:</span><span class=mh>0</span><span class=p>]</span> <span class=n>txCounter</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>reg</span> <span class=p>[</span><span class=mh>7</span><span class=o>:</span><span class=mh>0</span><span class=p>]</span> <span class=n>dataOut</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>reg</span> <span class=n>txPinRegister</span> <span class=o>=</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>reg</span> <span class=p>[</span><span class=mh>2</span><span class=o>:</span><span class=mh>0</span><span class=p>]</span> <span class=n>txBitNumber</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>reg</span> <span class=p>[</span><span class=mh>4</span><span class=o>:</span><span class=mh>0</span><span class=p>]</span> <span class=n>txByteCounter</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>assign</span> <span class=n>uart_tx</span> <span class=o>=</span> <span class=n>txPinRegister</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>MEMORY_LENGTH</span> <span class=o>=</span> <span class=mh>18</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>reg</span> <span class=p>[</span><span class=mh>7</span><span class=o>:</span><span class=mh>0</span><span class=p>]</span> <span class=n>testMemory</span> <span class=p>[</span><span class=n>MEMORY_LENGTH</span><span class=o>-</span><span class=mh>1</span><span class=o>:</span><span class=mh>0</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>initial</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>0</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;F&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>1</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;a&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>2</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;b&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>3</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;i&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>4</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;a&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>5</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;n&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>6</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;a&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>7</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;l&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>8</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;v&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>9</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;a&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>10</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;r&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>11</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;e&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>12</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;z&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>13</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;.&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>14</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;d&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>15</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;e&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>16</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34;v&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>testMemory</span><span class=p>[</span><span class=mh>17</span><span class=p>]</span> <span class=o>=</span> <span class=s>&#34; &#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>end</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>TX_STATE_IDLE</span> <span class=o>=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>TX_STATE_START_BIT</span> <span class=o>=</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>TX_STATE_WRITE</span> <span class=o>=</span> <span class=mh>2</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>TX_STATE_STOP_BIT</span> <span class=o>=</span> <span class=mh>3</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>localparam</span> <span class=n>TX_STATE_DEBOUNCE</span> <span class=o>=</span> <span class=mh>4</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>always</span> <span class=p>@(</span><span class=k>posedge</span> <span class=n>clk</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>    <span class=k>case</span> <span class=p>(</span><span class=n>txState</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=nl>TX_STATE_IDLE:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>btn1</span> <span class=o>==</span> <span class=mh>0</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=n>txState</span> <span class=o>&lt;=</span> <span class=n>TX_STATE_START_BIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>txCounter</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>txByteCounter</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span>
+</span></span><span class=line><span class=cl>            <span class=k>else</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=n>txPinRegister</span> <span class=o>&lt;=</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span> 
+</span></span><span class=line><span class=cl>        <span class=nl>TX_STATE_START_BIT:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=n>txPinRegister</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>((</span><span class=n>txCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>)</span> <span class=o>==</span> <span class=n>DELAY_FRAMES</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=n>txState</span> <span class=o>&lt;=</span> <span class=n>TX_STATE_WRITE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>dataOut</span> <span class=o>&lt;=</span> <span class=n>testMemory</span><span class=p>[</span><span class=n>txByteCounter</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>                <span class=n>txBitNumber</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=n>txCounter</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span> <span class=k>else</span> 
+</span></span><span class=line><span class=cl>                <span class=n>txCounter</span> <span class=o>&lt;=</span> <span class=n>txCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=nl>TX_STATE_WRITE:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=n>txPinRegister</span> <span class=o>&lt;=</span> <span class=n>dataOut</span><span class=p>[</span><span class=n>txBitNumber</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>((</span><span class=n>txCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>)</span> <span class=o>==</span> <span class=n>DELAY_FRAMES</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=k>if</span> <span class=p>(</span><span class=n>txBitNumber</span> <span class=o>==</span> <span class=mh>3</span><span class=mb>&#39;b111</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                    <span class=n>txState</span> <span class=o>&lt;=</span> <span class=n>TX_STATE_STOP_BIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=k>end</span> <span class=k>else</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                    <span class=n>txState</span> <span class=o>&lt;=</span> <span class=n>TX_STATE_WRITE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                    <span class=n>txBitNumber</span> <span class=o>&lt;=</span> <span class=n>txBitNumber</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=k>end</span>
+</span></span><span class=line><span class=cl>                <span class=n>txCounter</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span> <span class=k>else</span> 
+</span></span><span class=line><span class=cl>                <span class=n>txCounter</span> <span class=o>&lt;=</span> <span class=n>txCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=nl>TX_STATE_STOP_BIT:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=n>txPinRegister</span> <span class=o>&lt;=</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>((</span><span class=n>txCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>)</span> <span class=o>==</span> <span class=n>DELAY_FRAMES</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=k>if</span> <span class=p>(</span><span class=n>txByteCounter</span> <span class=o>==</span> <span class=n>MEMORY_LENGTH</span> <span class=o>-</span> <span class=mh>1</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                    <span class=n>txState</span> <span class=o>&lt;=</span> <span class=n>TX_STATE_DEBOUNCE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=k>end</span> <span class=k>else</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                    <span class=n>txByteCounter</span> <span class=o>&lt;=</span> <span class=n>txByteCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                    <span class=n>txState</span> <span class=o>&lt;=</span> <span class=n>TX_STATE_START_BIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=k>end</span>
+</span></span><span class=line><span class=cl>                <span class=n>txCounter</span> <span class=o>&lt;=</span> <span class=mh>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span> <span class=k>else</span> 
+</span></span><span class=line><span class=cl>                <span class=n>txCounter</span> <span class=o>&lt;=</span> <span class=n>txCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span>
+</span></span><span class=line><span class=cl>        <span class=nl>TX_STATE_DEBOUNCE:</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>txCounter</span> <span class=o>==</span> <span class=mh>23</span><span class=mb>&#39;b111111111111111111</span><span class=p>)</span> <span class=k>begin</span>
+</span></span><span class=line><span class=cl>                <span class=k>if</span> <span class=p>(</span><span class=n>btn1</span> <span class=o>==</span> <span class=mh>1</span><span class=p>)</span> 
+</span></span><span class=line><span class=cl>                    <span class=n>txState</span> <span class=o>&lt;=</span> <span class=n>TX_STATE_IDLE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>end</span> <span class=k>else</span>
+</span></span><span class=line><span class=cl>                <span class=n>txCounter</span> <span class=o>&lt;=</span> <span class=n>txCounter</span> <span class=o>+</span> <span class=mh>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>end</span>
+</span></span><span class=line><span class=cl>    <span class=k>endcase</span>      
+</span></span><span class=line><span class=cl><span class=k>end</span>
+</span></span><span class=line><span class=cl><span class=k>endmodule</span>
+</span></span></code></pre></td></tr></table></div></div></section><footer class=article-footer><section class=article-tags><a href=/tags/fpga/>FPGA</a>
+<a href=/tags/verilog/>Verilog</a>
+<a href=/tags/tang-nano-9k/>Tang Nano 9K</a></section><section class=article-copyright><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section><section class=article-lastmod><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<span>Última actualización Jun 06, 2023 00:00 UTC</span></section></footer><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css integrity=sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV crossorigin=anonymous><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js integrity=sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8 crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous defer></script><script>window.addEventListener("DOMContentLoaded",()=>{renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],ignoredClasses:["gist"]})})</script></article><aside class=related-content--wrapper><h2 class=section-title>Contenidos relacionados</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/p/tutorial-como-generar-n%C3%BAmeros-aleatorios-en-una-fpga/><div class=article-details><h2 class=article-title>Tutorial: Como generar números aleatorios en una FPGA</h2></div></a></article><article class=has-image><a href=/p/tang-nano-primero-pasos/><div class=article-image><img src=/p/tang-nano-primero-pasos/cover.c514d916917173a48a42e0114b469961_hud7e36f7e20e71be184458283bdae4646_55974_250x150_fill_q75_box_smart1.jpg width=250 height=150 loading=lazy alt="Featured image of post Tutorial: Encendiendo un LED con la placa de desarrollo Tang Nano 9K" data-key=Tang-nano-primero-pasos data-hash="md5-xRTZFpFxc6SKQuARS0aZYQ=="></div><div class=article-details><h2 class=article-title>Tutorial: Encendiendo un LED con la placa de desarrollo Tang Nano 9K</h2></div></a></article><article><a href=/p/asic-tamagothi-un-proyecto-para-tinytapeout/><div class=article-details><h2 class=article-title>ASIC Tamagothi un proyecto para TinyTapeout</h2></div></a></article><article><a href=/p/como-crear-un-clasificador-de-imagenes-con-redes-neuronales/><div class=article-details><h2 class=article-title>Como crear un clasificador de imagenes con redes neuronales</h2></div></a></article></div></div></aside><div class=disqus-container><div id=disqus_thread></div><script>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//fabianalvarez.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2022 -
+2024 Fabian's Blog</section><section class=powerby>Creado con <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Tema <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.25.0>Stack</a></b> diseñado por <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

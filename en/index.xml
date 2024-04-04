@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Fabian's Blog</title><link>https://fabianalvarez.dev/en/</link><description>Recent content on Fabian's Blog</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 06 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://fabianalvarez.dev/en/index.xml" rel="self" type="application/rss+xml"/><item><title>Tutorial: Lighting an LED with the Tang Nano 9K development board</title><link>https://fabianalvarez.dev/en/p/tang-nano-first-steps/</link><pubDate>Mon, 06 Mar 2023 00:00:00 +0000</pubDate><guid>https://fabianalvarez.dev/en/p/tang-nano-first-steps/</guid><description>&lt;img src="https://fabianalvarez.dev/p/tang-nano-primero-pasos/cover.jpg" alt="Featured image of post Tutorial: Lighting an LED with the Tang Nano 9K development board" />&lt;p>The Tang Nano is a series of FPGA development boards developed by Sipeed, based on FPGAs from Gowin, a Chinese company known for their low cost and high performance. In this tutorial, I will show you how to light an LED using the Tang Nano 9K board, which features a Gowin GW1N-9K FPGA, 9K LUTs, 240Kb RAM, 128Kb ROM, 2 PLLs and 2 SPIs. Through the Gowin IDE, you will learn how to program the board and make a simple connection to achieve this goal.&lt;/p>
+&lt;p>Steps to light an LED with the Tang Nano 9K board:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Download and install the Gowin IDE:&lt;/p>
+&lt;ul>
+&lt;li>Visit the &lt;a class="link" href="https://www.gowinsemi.com/en/support/home/" target="_blank" rel="noopener"
+>Gowin website&lt;/a> to download the IDE.&lt;/li>
+&lt;li>The educational version is free, but you can also request a free license for the professional version by completing a registration.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Create a new project in the IDE:&lt;/p>
+&lt;ul>
+&lt;li>Open the Gowin IDE and select the &amp;ldquo;File&amp;rdquo; tab.&lt;/li>
+&lt;li>Click &amp;ldquo;New Project&amp;rdquo; and choose a name and location for your project, such as &amp;ldquo;LED&amp;rdquo;.&lt;/li>
+&lt;li>Make sure to save the project in the Gowin project folder.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;p>Select the appropriate device:&lt;/p>
+&lt;ul>
+&lt;li>When creating the project, you must select the device that corresponds to your version of the Tang Nano board.&lt;/li>
+&lt;li>For the Tang Nano 9K with FPGA GW1N-LV9QN48C6/I5, choose the corresponding option in the IDE.&lt;/li>
+&lt;/ul>
+&lt;ol start="4">
+&lt;li>
+&lt;p>Create a new Verilog file:&lt;/p>
+&lt;ul>
+&lt;li>Click on the &amp;ldquo;File&amp;rdquo; tab and select &amp;ldquo;New File&amp;rdquo;.&lt;/li>
+&lt;li>File name: &amp;ldquo;LED.v&amp;rdquo;.&lt;/li>
+&lt;li>Save the file in the project folder.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Write the Verilog code to turn on the LED:&lt;/p>
+&lt;ul>
+&lt;li>Open the file &amp;ldquo;LED.v&amp;rdquo; and write the following code:&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-verilog" data-lang="verilog">&lt;span class="line">&lt;span class="cl">&lt;span class="k">module&lt;/span> &lt;span class="n">LED&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">input&lt;/span> &lt;span class="n">btn&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">output&lt;/span> &lt;span class="kt">reg&lt;/span> &lt;span class="n">led&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">always&lt;/span> &lt;span class="p">@(&lt;/span>&lt;span class="k">posedge&lt;/span> &lt;span class="n">btn&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">led&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="o">~&lt;/span>&lt;span class="n">led&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">endmodule&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ol start="6">
+&lt;li>
+&lt;p>Create the pin mapping file:&lt;/p>
+&lt;ul>
+&lt;li>Use the IDE&amp;rsquo;s FloorPlanner to create the pin mapping file.&lt;/li>
+&lt;li>Go to the &amp;ldquo;Tools&amp;rdquo; tab and select &amp;ldquo;FloorPlanner&amp;rdquo;.&lt;/li>
+&lt;li>For button 1 is pin 4 and led 1 is pin 10, this can be seen in the &lt;a class="link" href="https://dl.sipeed.com/shareURL/TANG/Nano%209K/2_Schematic" target="_blank" rel="noopener"
+>board schematic&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Program the FPGA:&lt;/p>
+&lt;ul>
+&lt;li>Go to the &amp;ldquo;Tools&amp;rdquo; tab and select &amp;ldquo;Program Device&amp;rdquo;.&lt;/li>
+&lt;li>Follow the instructions to upload the program to the FPGA.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Observe the result:&lt;/p>
+&lt;ul>
+&lt;li>Once the program is uploaded to the FPGA, LED 1 on the Tang Nano 9K board will turn on and off each time you press button 1.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;p>Note that the buttons and LEDs on this FPGA have inverse behavior, meaning that the value is 0 when a button is pressed and 1 when it is not pressed. Similarly, when the value is 0, the LED is on, and when the value is 1, the LED is off. To adjust for this, a modification has been made to the Verilog code by inverting the default value of the LED.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-verilog" data-lang="verilog">&lt;span class="line">&lt;span class="cl">&lt;span class="k">module&lt;/span> &lt;span class="n">LED&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">input&lt;/span> &lt;span class="n">btn&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">output&lt;/span> &lt;span class="kt">reg&lt;/span> &lt;span class="n">led&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mh">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">always&lt;/span> &lt;span class="p">@(&lt;/span>&lt;span class="k">posedge&lt;/span> &lt;span class="n">btn&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">led&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="o">~&lt;/span>&lt;span class="n">led&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">endmodule&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>For the more technical people the button configuration of the Tang Nano 9K board is in pull-up and the leds are in common anode, this is shown in the board schematic:&lt;/p>
+&lt;p>&lt;img src="https://i.imgur.com/6VTTzwh.png"
+loading="lazy"
+alt="picture 1"
+>&lt;/p>
+&lt;p>&lt;img src="https://i.imgur.com/08mRW9q.png"
+loading="lazy"
+alt="picture 2"
+>&lt;/p>
+&lt;p>With this tutorial, you have learned how to light an LED using Sipeed&amp;rsquo;s Tang Nano 9K development board. You have also discovered an important feature of this board, where the operation of the integrated LEDs and buttons is reversed compared to most development boards. Explore more possibilities and keep experimenting with this powerful FPGA development tool!&lt;/p></description></item><item><title>Archives</title><link>https://fabianalvarez.dev/en/archives/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate><guid>https://fabianalvarez.dev/en/archives/</guid><description/></item><item><title>Links</title><link>https://fabianalvarez.dev/en/links/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fabianalvarez.dev/en/links/</guid><description>&lt;p>To use this feature, add &lt;code>links&lt;/code> section to frontmatter.&lt;/p>
+&lt;p>This page&amp;rsquo;s frontmatter:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="line">&lt;span class="cl">&lt;span class="nt">links&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">title&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">GitHub&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">description&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">GitHub is the world&amp;#39;s largest software development platform.&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">website&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.com&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>- &lt;span class="nt">title&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">TypeScript&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">description&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">TypeScript is a typed superset of JavaScript that compiles to plain JavaScript.&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">website&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">https://www.typescriptlang.org&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w"> &lt;/span>&lt;span class="nt">image&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">ts-logo-128.jpg&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>image&lt;/code> field accepts both local and external images.&lt;/p></description></item><item><title>Search</title><link>https://fabianalvarez.dev/en/search/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://fabianalvarez.dev/en/search/</guid><description/></item></channel></rss>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Proyectos on Fabian's Blog</title><link>https://fabianalvarez.dev/categories/proyectos/</link><description>Recent content in Proyectos on Fabian's Blog</description><generator>Hugo -- gohugo.io</generator><language>es</language><lastBuildDate>Thu, 07 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://fabianalvarez.dev/categories/proyectos/index.xml" rel="self" type="application/rss+xml"/><item><title>ASIC Tamagothi un proyecto para TinyTapeout</title><link>https://fabianalvarez.dev/p/asic-tamagothi-un-proyecto-para-tinytapeout/</link><pubDate>Thu, 07 Sep 2023 00:00:00 +0000</pubDate><guid>https://fabianalvarez.dev/p/asic-tamagothi-un-proyecto-para-tinytapeout/</guid><description>&lt;p>Para el proyecto personal TinyTapeout 4, diseñé un ASIC Tamagotchi que reside en el chip. Dado el espacio limitado en el chip, este Tamagotchi es simple pero funcional. Además, representa un excelente punto de partida para aprender sobre el diseño de ASIC y explora conceptos interesantes, como la implementación de la comunicación serial UART y la generación de números pseudoaleatorios, que mencioné en un post anterior.&lt;/p>
+&lt;h2 id="acerca-del-tamagotchi">
+&lt;a href="#acerca-del-tamagotchi">#&lt;/a>
+Acerca del Tamagotchi
+&lt;/h2>&lt;p>El diseño del Tamagotchi es muy sencillo. Consiste en una pequeña memoria que almacena caracteres en formato ASCII para permitir la representación gráfica del Tamagotchi en la consola serial. También incluye una lógica de control basada en máquinas de estados para mostrar diferentes animaciones que representan los estados del Tamagotchi. Además, cuenta con una especie de &amp;ldquo;barra de necesidades&amp;rdquo; que muestra sus estados de hambre, sueño y aburrimiento. Estas necesidades aumentan con el tiempo y pueden reducirse mediante la entrada de comandos desde el teclado, correspondientes a cada necesidad. En caso de que alguna de estas necesidades no se satisfaga adecuadamente, el Tamagotchi morirá y será necesario reiniciar el chip para jugar nuevamente, tal como sucede en un Tamagotchi real.&lt;/p>
+&lt;h2 id="diseño">
+&lt;a href="#dise%c3%b1o">#&lt;/a>
+Diseño
+&lt;/h2>&lt;p>El corazón del Tamagotchi es, en gran medida, el generador de números pseudoaleatorios. Esto se debe a que controla cómo y cuáles de las estadísticas del Tamagotchi aumentarán de manera aparentemente &amp;ldquo;aleatoria&amp;rdquo;.&lt;/p>
+&lt;p>Este diseño, a pesar de su simplicidad, abarca una serie de conceptos y funciones interesantes que hacen que el proyecto sea valioso tanto desde el punto de vista educativo como funcional. Además, el ASIC Tamagotchi en el chip es un proyecto creativo y entretenido que permite explorar la creación de un sistema embebido en un entorno de recursos limitados.&lt;/p>
+&lt;h2 id="generador-de-números-pseudoaleatorios">
+&lt;a href="#generador-de-n%c3%bameros-pseudoaleatorios">#&lt;/a>
+Generador de números pseudoaleatorios
+&lt;/h2>&lt;p>El generador de números pseudoaleatorios es un Linear Feedback Shift Register (LFSR) de 8 bits. El LFSR es un circuito secuencial que genera una secuencia de bits que se repite después de un cierto número de ciclos de reloj. La secuencia de bits generada por un LFSR parece aleatoria, pero en realidad es determinista y periódica. La longitud del período (el número de ciclos de reloj antes de que la secuencia se repita) depende de cómo se configure el LFSR, específicamente de qué bits se utilizan para la retroalimentación.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-verilog" data-lang="verilog">&lt;span class="line">&lt;span class="cl">&lt;span class="k">module&lt;/span> &lt;span class="n">random&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">input&lt;/span> &lt;span class="kt">wire&lt;/span> &lt;span class="n">clk&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// Clock input
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">input&lt;/span> &lt;span class="kt">wire&lt;/span> &lt;span class="n">rst&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// Reset input
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">input&lt;/span> &lt;span class="kt">wire&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">seed&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="c1">// 8-bit seed input
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">output&lt;/span> &lt;span class="kt">wire&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">rand_out&lt;/span> &lt;span class="c1">// 8-bit pseudo-random number output
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kt">reg&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1">// 8-bit register to hold the LFSR state
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">always&lt;/span> &lt;span class="p">@(&lt;/span>&lt;span class="k">posedge&lt;/span> &lt;span class="n">clk&lt;/span> &lt;span class="k">or&lt;/span> &lt;span class="k">posedge&lt;/span> &lt;span class="n">rst&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">rst&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">lfsr_reg&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">seed&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="c1">// Initialize the LFSR with the seed
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="k">end&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">begin&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">// XOR feedback taps for an 8-bit LFSR: 8, 6, 5, 4
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span> &lt;span class="n">lfsr_reg&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">6&lt;/span>&lt;span class="o">:&lt;/span>&lt;span class="mh">0&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">7&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">^&lt;/span> &lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">4&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">^&lt;/span> &lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">5&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">^&lt;/span> &lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">3&lt;/span>&lt;span class="p">]};&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">end&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">assign&lt;/span> &lt;span class="n">rand_out&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">lfsr_reg&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">endmodule&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="memoria-de-caracteres">
+&lt;a href="#memoria-de-caracteres">#&lt;/a>
+Memoria de caracteres
+&lt;/h2>&lt;p>La memoria de caracteres es una memoria ROM de 8 bits que almacena caracteres en formato ASCII para permitir la representación gráfica del Tamagotchi en la consola serial. La memoria de caracteres es una memoria de solo lectura, por lo que los caracteres se cargan en la memoria durante la síntesis. La memoria de caracteres se implementa como una memoria de solo lectura de 8 bits con 256 palabras, donde cada palabra es un carácter ASCII de 8 bits. La memoria de caracteres se carga con los caracteres ASCII que representan las diferentes animaciones del Tamagotchi.&lt;/p>
+&lt;h2 id="comunicación-serial-uart">
+&lt;a href="#comunicaci%c3%b3n-serial-uart">#&lt;/a>
+Comunicación serial UART
+&lt;/h2>&lt;p>La comunicación serial UART se implementa mediante una máquina de estados finitos (FSM) que controla la transmisión y recepción de datos. Use de base la transmisión que implemente en un post anterior&lt;/p>
+&lt;h2 id="lógica-de-control">
+&lt;a href="#l%c3%b3gica-de-control">#&lt;/a>
+Lógica de control
+&lt;/h2>&lt;p>La logica de control es bastante simple en su concepto, para cada necesidad existe un registro que se va decrementando con el tiempo, cuando el registro llega a cero el Tamagotchi muere. Para evitar que el registro llegue a cero se puede ingresar un comando desde el teclado que aumenta el registro.&lt;/p></description></item></channel></rss>
